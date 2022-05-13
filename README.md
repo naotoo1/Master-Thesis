@@ -5,7 +5,7 @@ Thesis work submitted to Faculty of Applied Computer Sciences and Biosciences at
 
 
 ## Author ##
-Nana Abeka Otoo
+[Nana Abeka Otoo](https://github.com/naotoo1)
 
 ## Supervisors ##
 * Prof. Dr. Thomas Villmann
