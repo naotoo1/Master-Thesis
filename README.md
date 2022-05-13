@@ -20,16 +20,16 @@ visualization and documentation of the results.
 The Thesis implementaion has been done in Python and can be found here: [Classification-Label-Security-Certainty](https://github.com/naotoo1/Classification-Label-Security-with-CRT)
 
 ## Chapter Overview ##
-**Chapter 1**
+### Chapter 1 ###
 * Introduction
 * Motivation
 * Brief on Clustering
 
-**Chapter 2**
+### Chapter 2 ###
 * Objective Function Clustering
 *  Fuzzy c-Means
 
-**Chapter 3 : Learning Vector Quantization**
+### Chapter 3 : Learning Vector Quantization ###
 * Introduction to Learning Vector Quantization
 * Generalized Learning Vector Quantization
 * Generalized Matrix Learning Vector Quantization
@@ -38,17 +38,17 @@ The Thesis implementaion has been done in Python and can be found here: [Classif
 * Robust Soft Learning Vector Quantization with Cross-Entropy Optimization
 * Classification Label Security/Certainty
 
-**Chapter 4 : Experimental Results**
+### Chapter 4 : Experimental Results ###
 * General Overview of Train/Test Procedure
 * Iris Data Set
 * Classification Label Security of Iris Data set
 * Breast Cancer Wisconsin (Diagnostic) Data set (WDBC)
 * Classification Label Security of Breast Cancer Wisconsin(Diagnostic) Data set
 
-**Chapter 5: Conclusion and Prospective Work**
+### Chapter 5: Conclusion and Prospective Work ###
 * Conclusion
 
-**Appendix A**
+### Appendix A ###
 * Reference Implementation in Python
 
 ## Thesis Template ##
