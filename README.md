@@ -4,22 +4,22 @@ Thesis work submitted to Faculty of Applied Computer Sciences and Biosciences at
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
-# Author
+## Author ##
 Nana Abeka Otoo
 
-# Supervisors
+## Supervisors ##
 * Prof. Dr. Thomas Villmann
 * Msc. Jensun Ravichandran
 
-# Abstract 
+## Abstract ##
 Classification label security determines the extent to which predicted labels from classification
 results can be trusted. The uncertainty surrounding classification labels is resolved by the security to which the classification is made. Therefore, classification label security is very significant for decision-making whenever we are encountered with a classification task. This thesis investigates the determination of the classification label security by utilizing fuzzy probabilistic assignments of Fuzzy c-means. The investigation is accompanied by implementation, experimentation,
 visualization and documentation of the results.
 
-# Code base
+## Code base ##
 The Thesis implementaion has been done in Python and can be found here: [Classification-Label-Security-Certainty](https://github.com/naotoo1/Classification-Label-Security-with-CRT)
 
-# Chapter Overview
+## Chapter Overview ##
 **Chapter 1**
 * Introduction
 * Motivation
@@ -51,9 +51,11 @@ The Thesis implementaion has been done in Python and can be found here: [Classif
 **Appendix A**
 * Reference Implementation in Python
 
-# Thesis Template
+## Thesis Template ##
 * https://git.hs-mittweida.de/hsmw-latex/hsmw-latex/-/tree/master
 
 
-# Contact
+## Contact ##
  * abekaotoo@gmail.com
+
+
