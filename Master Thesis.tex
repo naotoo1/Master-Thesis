@@ -1,0 +1,1766 @@
+\documentclass[english]{HSMW-Thesis}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{}
+
+\lstdefinestyle{chstyle}{%
+%basicstyle=\ttfamily\small,
+commentstyle=\color{green!60!black},
+keywordstyle=\color{magenta},
+stringstyle=\color{blue!50!red},
+showstringspaces=false,
+numbers=left,
+numberstyle=\footnotesize\color{gray},
+numbersep=1pt,
+%stepnumber=2,
+tabsize=2,
+breaklines=true,
+inputpath=C:/Users/nana abeka otoo/Downloads/send from/pycode
+}
+
+\Art{Master Thesis}
+
+\Anrede{Herr}
+\Vorname{Nana Abeka}
+\Nachname{Otoo}
+
+\Thema{Determining of Classification Label Security/Certainty}
+\Unterthema{}
+
+\Studiengang{Applied Mathematics for Network and Data Sciences }
+\Seminargruppe{MA18w1-M}
+\Fakultaet{}
+
+\Erstpruefer{Prof. Dr. Thomas Villmann}
+\Zweitpruefer{MSc. Jensun Ravichandran}
+
+\Datum{}
+
+\Tag{}
+\Monat{}
+\Jahr{}
+
+\Anlagen{}
+\Copyright{}
+\Textsatz{}
+\Druck{}
+\Verlag{}
+\ISBN{}
+
+\begin{document}
+	\begin{center}
+A big thank you goes to\\\vspace{20pt}
+my loved ones \\
+for their support and love.\\ \vspace{20pt}
+Special gratitude goes to \\\vspace{20pt}
+Prof. Dr. Thomas Villmann\\
+for his supervision and guidance\\
+and MSc. Jensun Ravichandran \\ for his supervision, guidance and comments
+	\end{center}
+
+\begin{Referat}
+ Classification label security determines the extent to which predicted labels from classification results can be trusted. The uncertainty surrounding classification labels is resolved by the security to which the classification is made. Therefore, classification label security is very significant for decision-making whenever we are encountered with a classification task. This thesis investigates the determination of the classification label security by utilizing fuzzy probabilistic assignments of Fuzzy c-means. The investigation is accompanied by implementation, experimentation, visualization and documentation of the results.
+\end{Referat}
+
+\begin{Vorwort}
+% Vorwort
+\end{Vorwort}
+
+\Hauptteil
+% Diese Anweisung nicht loeschen!
+
+\chapter{Introduction}
+
+Machine learning as a field of study has gained prominence and publicity in academia and industry in recent times. One is not wrong to say that, Machine learning has become a significant matter of discussion among students, industry players and every professional whose work, one way or the other, is influenced by it. We can at this stage realize why almost every practical process witnessed in our lives today is either applying machine learning or is migrating to its adoption. The benefits that arise with the utilization of machine learning processes can be exemplified and witnessed in areas such as medicine, security, engineering, commerce, agriculture, only to mention a few since the list keeps growing with new innovations and methods being added day by day. 
+
+In this regard, a learning machine is a model tasked to learn from a given data and make valuable predictions on new data that was not used in the learning process. A well-grounded area in machine learning is prototype-based models that learn prototypes from a given data set by training and make classifications on new data using the difference between the data points and learned prototypes. It is suitable to observe the many prototype-based algorithms that are commonly applied today in most processes.  A family of prototype-based models that have pitched the interest of most users is the well-known Learning Vector Quantization. The interest in Learning Vector Quantization can be explained by the facts that surround its easily comprehensible theoretical considerations and practical implementations. At the moment, Learning Vector Quantisation holds an enviable position among the classification algorithms found in the area of prototype-based models.  We begin to ask for reasons in this regard; a simple answer to this question lies in its understandable mathematical inclination, easy usability, high performance coupled with outcomes that can be explained. It is right to say that every classifier has the primary duty of making reasonable or, so to say, good classifications. Again, it is desirable from the usage point of view that a good classifier possesses the attribute that allows users to know the degree to which classification results can be trusted. The ability of a classifier to come equipped with such an attribute is very significant because it provides the security to which classification labels can be accepted. The classification label security remains vital for making decisions in this regard.
+
+
+\section{Motivation}
+T. Kohonen introduced Learning Vector Quantisation (LVQ) as a prototype-based analog of unsupervised competitive learning, which he designed to classify different patterns in data \cite{kohonen2001learning}. Even though LVQ results in optimal reference vectors, it is characterized by issues of divergent reference vectors\cite{sato1996generalized}. This challenge, among others, led to attempts geared towards improved variants in \cite{kohonen2001learning} but to no avail. The outcomes of these variants are, in practice, not the same\cite{biehl2006learning}.
+
+
+The introduction of Generalized Learning Vector Quantization (GLVQ) by Sato and Yamada solved the problem concerning the diverging reference vectors, utilizes a cost function-based approach, and incorporates convergence conditions in the winner takes all learning rule\cite{sato1996generalized}. The reliability and robustness of LVQ and its variants is penchant on the homogeneity of data used and, most importantly, they heavily utilize and depend on Euclidean distance measure which may not be universal for all cases understudy\cite{article}.
+
+GLVQ provides a good generalization with convergence conditions, based on any standard distance metric which can be optimized \cite{hammer2005generalization}. A substantial and balanced step for solving this problem led to applying relevant factors to specify a family of distance measures leading to the  Relevance GLVQ\cite{hammer2002generalized}.
+
+A variant of Relevance LVQ  called Matrix Relevance LVQ utilizes a matrix of relevances that will be learned in the same manner as the weights using GLVQ update rules\cite{schneider2009adaptive}. 
+It remains to show which choice of a matrix of relevant factors initialization is required to parametrize the distance measure for optimal classification results\cite{hammer2002generalized,bunte2012limited}. Consider the optimal classification results linked with the certainty/security of the classification labels from a Fuzzy clustering utilizing a covariance matrix\cite{gath1989unsupervised}. A version of LVQ which utilizes cross-entropy for classification is introduced\cite{villmann2018probabilistic,kaden2014aspects}. The use of cross-entropy optimization in LVQ is discovered to result in class positions that ensure classification label security\cite{villmann2018probabilistic}. The computation of classification label security is reliant on the converged reference vectors\cite{bezdek1981pattern} whose optimization, in turn is also dependent on its initialization\cite{boubezoul2008application}.
+The classification label security remains to be investigated in this regard.
+Consider unsupervised Fuzzy c means (FCM) by Bezdek, which utilizes fuzzy membership to ascertain the certainty of cluster members\cite{bezdek1981pattern}. A good way forward is to investigate the utilization of fuzzy probabilistic assignments of FCM to determine the classification label security with applications to GLVQ, Generalized Matrix Learning Vector Quantization (GMLVQ) and Cross-Entropy Learning Vector Quantization (CELVQ).
+
+\section{Brief on Clustering}
+The clustering task involves partitioning data without labels into subgroups based on data features representing structure in the data set. The underlying similarity between data patterns is used for arranging data into clusters. We consider the following definitions:
+
+\begin{definition}\cite{bezdek1981pattern} 
+	\emph{Hard c-Partition}\label{def:Hard c-Partition}.\hspace{2pt} $ X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_n\right\rbrace $\hspace{2pt} is any finite set;\hspace{2pt} $V_{cn}$\hspace{2pt} is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Hard c-partition space for}\hspace{2pt} $X$\hspace{2pt} is the set		
+	\begin{equation*}\label{hard} %remove
+		M_c= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \{0,1\}\hspace{2pt} \forall\hspace{2pt} i,k\hspace{2pt} ;  \hspace{2pt}\sum_{i=1}^{c} u_{ik}=1 \hspace{2pt}\forall\hspace{2pt} k \hspace{2pt};\hspace{2pt} 0<\sum_{k=1}^{n} u_{ik}< n \hspace{2pt}\forall \hspace{2pt}i \bigg\}
+	\end{equation*}	
+	\begin{subequations}
+		\begin{equation}\label{condition 1}
+			u_{ik}\in \{0,1\},\hspace{10pt}  1\leq i\leq c,\hspace{10pt} 1\leq k\leq n
+		\end{equation}
+		$\left( \ref{condition 1}\right)$\hspace{2pt} means that the fuzzy probabilistic assignment of the $ith$ partition of\hspace{2pt} $X$\hspace{2pt} is $1$ or $0$ when\hspace{2pt} $\mathbf{x}_k$\hspace{2pt} is in the $ith$ partition and otherwise respectively\cite{bezdek1981pattern}. 
+		\begin{equation}\label{condition 2}
+			\sum_{i=1}^{c} u_{ik}=1, \hspace{10pt} 1\leq k \leq n
+		\end{equation}
+		$\left( \ref{condition 2}\right)$\hspace{2pt} indicates each pattern\hspace{2pt} $\mathbf{x}_k$\hspace{2pt} can be uniquely assigned a cluster\hspace{2pt} $c$\hspace{2pt} subsets\cite{bezdek1981pattern}.
+		\begin{equation}\label{cond 3}
+			0<\sum_{k=1}^{n} u_{ik}< n ,\hspace{15pt}  1\leq i \leq c  
+		\end{equation} 
+		$\left( \ref{cond 3}\right) $ indicates there should be at least two partition subsets of\hspace{2pt} $X$\hspace{2pt} and these subsets should also be less than the cardinality of\hspace{2pt} $X$: \(2\leq c<n\)\cite{bezdek1981pattern}.
+		
+		
+	\end{subequations}
+	
+	
+\end{definition}
+
+
+\begin{definition}\cite{bezdek1981pattern}
+	\emph{Fuzzy c-Partition}\label{def:Fuzzy c-Partition}.\hspace{2pt} $ X $\hspace{2pt} is any finite set;\hspace{2pt} $V_{cn}$ is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Fuzzy c-partion space for}\hspace{2pt} $X$\hspace{2pt} is the set
+	\begin{equation}\label{Fuzzy set space}
+		M_{fc}= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \left[ 0,1\right]\hspace{2pt}  \forall\hspace{2pt} i,k\hspace{2pt} \hspace{2pt};\hspace{2pt} \sum_{i=1}^{c} u_{ik}=1\hspace{2pt} \forall\hspace{2pt} k \hspace{2pt};\hspace{2pt}  0<\sum_{k=1}^{n} u_{ik}< n \hspace{2pt} \forall\hspace{2pt} i \bigg\}
+	\end{equation}
+ condition (\ref{condition 1}) is extendend to include all values between $1$ and $0$. Hence removing the crisp assignments of membership functions $u_{ik}$\cite{bezdek1981pattern}.
+	
+\end{definition}
+
+\begin{definition}\cite{pal2005possibilistic}
+	\emph{Possibilistic c-Partition}\label{def:Possibilistic c-Partition}.\hspace{2pt} $ X $ \hspace{2pt}is any finite set;\hspace{2pt} $V_{cn}$ is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Possibilistic c-partion space for}\hspace{2pt} $X$\hspace{2pt} is the set	
+	\begin{equation}\label{Possibilistic set space}
+		M_{pc}= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \left[ 0,1\right] \hspace{2pt} \forall\hspace{2pt} i,k\hspace{2pt} ;\hspace{2pt} \forall \hspace{2pt}k\hspace{2pt} \exists\hspace{2pt} i \hspace{2pt}\ni u_{ik}> 0\bigg\}
+	\end{equation}
+   the column condition in (\ref{condition 2}) is changed and replaced with\hspace{2pt} $0<\sum_{i=1}^{c} u_{ik}\leq c$\hspace{2pt} and\hspace{2pt} $u_{ik}$\hspace{2pt} is referred to as tipicality of data pattern\hspace{2pt} $\mathbf{x}_k$\cite{krishnapuram1993possibilistic}.
+	
+\end{definition}
+
+\chapter{Objective Function Clustering}
+The primary approach here is to utilize a sum of squares errors function optimized to achieve a minimized error point at which clustering results can be accepted. It is significant to know that optimal clustering, in this case, is achieved at the local extrema of the objective function\cite{bezdek1981pattern}.
+
+
+
+
+\section{Fuzzy c-Means}
+As described by Bezdek\cite{bezdek1981pattern}, the Fuzzy c-means provides a soft alternative to the Hard c-means clustering algorithm. The discrepancy comes from the way the fuzzy $U$- matrix is partitioned along with some conditions allowing the crisp assignments as seen in hard c- means to now include the full range of probabilistic assignments as defined above in $\left( \ref{Fuzzy set space}\right)$ and referred to as fuzzy memberships. The fuzzy memberships determine the degrees to which patterns belong in a partition(cluster).
+\begin{theorem}\cite{bezdek1981pattern}
+	let the objective function  of Fuzzy c-Means be
+	\begin{equation*}\label{FCM Objective} %remove
+		J_m\left( U,\mathbf{v}\right) =\sum_{k=1}^{n}\sum_{i=1}^{c}\left( u_{ik}\right) ^{m}\left( d_{ik}\right) ^2
+	\end{equation*}
+	and  assume an inner product norm to be 
+	\begin{align*}\label{inner product norm}
+		\left( d_{ik}\right)^{2} &= \parallel \mathbf{x}_k - \mathbf{v}_{i}\parallel_{A}^{2}\\
+		&= \langle \mathbf{x}_k-\mathbf{v}_i,\mathbf{x}_k-\mathbf{v}_i\rangle_A\\
+		&= \left( \mathbf{x}_k-\mathbf{v}_i\right) ^{T}A\left( \mathbf{x}_k-\mathbf{v}_i\right) 
+	\end{align*}
+	where
+	 \begin{equation*}
+	 	U\in M_{fc}
+	 \end{equation*}
+	 is the fuzzy c- partion of\hspace{3pt} $X$  and
+	 \begin{equation*}
+	 	 \mathbf{v}=\left(\mathbf{v}_1,\mathbf{v}_2,\ldots,\mathbf{v}_c\right)\in \mathbb{R}^{cp}\hspace{5pt} \text{with}\hspace{5pt}  \mathbf{v}_i\in \mathbb{R}^{p}
+	 \end{equation*}
+	 is the cluster center or prototypes of \hspace{3pt} $u_i$,$\hspace{3pt} 1\leq i \leq c$	
+	 \begin{equation*}
+	 \text{choose}\hspace{3pt}	m \in \left( 1,\infty\right)
+	 \end{equation*}	
+	let\hspace{3pt} $X$\hspace{3pt} have at least \hspace{2pt}$c$ less than \hspace{2pt} $n$ \hspace{2pt} distinct points, and define for all\hspace{2pt} $k$\hspace{2pt} the sets
+	$$I_k=\left\lbrace i\mid 1\leq i \leq c;\hspace{2pt} d_{ik}=\parallel \mathbf{x}_k-\mathbf{v}_i\parallel_A=0\right\rbrace$$
+	$$\tilde{I}_k=\left\lbrace 1,2,\ldots ,c\right\rbrace - I_k$$
+	then\hspace{2pt} $J_m\left( U,\mathbf{v}\right)$\hspace{2pt} may be globally minimised only if
+	
+	\begin{subequations}
+		\begin{equation}\label{membership function}
+			I_k=\varnothing \Rightarrow u_{ik}=\frac{1}{\left[  \sum_{j=1}^{c}\left( \frac{d_{ik}}{d_{jk}}\right)^{\frac{2}{\left( m-1\right) }}\right]} 
+		\end{equation}
+		or \begin{equation}\label{membership function1}
+			I_k\neq\varnothing \Rightarrow u_{ik}= 0 \hspace{3pt}\forall \hspace{3pt} \tilde{I}_k \hspace{10pt}and\hspace{10pt} \sum_{i\in I_k}u_{ik} =1 
+		\end{equation}
+		
+		\begin{equation}\label{cluster center}
+			\mathbf{v}_i=\frac{\sum_{k=1}^{n}\left( u_{ik}\right)^{m} \mathbf{x}_k}{\sum_{k=1}^{n}\left( u_{ik}\right) ^{m}} \hspace{5pt}\forall \hspace{5pt} 1\leq i \leq c
+		\end{equation}
+	\end{subequations}
+	
+\end{theorem}
+%\underline{FCM Algorithm, Bezdek\cite{bezdek1981pattern}}\\
+%step 1. Fix $c, 2\leq c < n;$ choose any inner product norm of the form in $\left( \ref{FCM Objective}\right) $; \\fix $m\in \left[ 1,\infty\right)$ . Initialize $U^{0} \in M_{fc}\left( %\ref{Fuzzy set space}\right) $ at iteration $l,l= 0,1,2,\ldots:\\$
+%step 2. Calculate the cluster centers $v_{i}^{l}$ using$\left( \ref{cluster center}\right) $ and $U^{l} $\\
+%step 3. Update $U^{l}$ with $\left( \ref{membership function}\right) \left( \ref{membership function1}\right) $ and $ v_{i}^{l}$\\
+%step 4. Compare $U^{l}$ to $U^{l+1} $ in a convenient  matrix norm: if $\parallel U^{l+1}-U^{l}\parallel\leq \epsilon$ stop. otherwise, go to step 2.\\
+
+\begin{figure}[h!]\label{FCM Algorithm}
+	\centering
+	\caption{FCM Algorithm, Bezdek\cite{bezdek1981pattern}}\label{FCM Centers}
+	
+	\begin{tabular}{ l l }
+		\cline{1-2}  \hline
+		
+		\multicolumn{1}{c|}{\emph{Store}} &\multicolumn{1}{c}{Unlabelled Object Data $X= \left\lbrace \mathbf{x_{1},x_{2},\ldots,x_{n}}\right\rbrace \subset \Re^{p}$  } \\ \hline
+		\multicolumn{1}{c|}{} &$\ast 1<c<n$  \\ 
+		\multicolumn{1}{c|}{} &$\ast m>1$ \\ 
+		\multicolumn{1}{c|}{} &$\ast l_{max}= iteration\hspace{3pt} limit$  \\
+		\multicolumn{1}{c|}{} &$pick \ast Norm\hspace{3pt} for\hspace{3pt} J_{m} :||\mathbf{x}||_{A}=\sqrt{\mathbf{x^{T}Ax}} $ \\
+		\multicolumn{1}{c|}{} &$\ast0<\epsilon = termination \hspace{3pt} criterion$\\\hline
+		\multicolumn{1}{c|}{} &$Initialize \hspace{5pt}U^{0} \in M_{fc}\left( \ref{Fuzzy set space}\right) \hspace{3pt} at\hspace{3pt} iteration\hspace{5pt} l,l= 0,1,2,\ldots,:$\\	\hline
+		\multicolumn{1}{c|}{\emph{Do}} &$Calculate\hspace{4pt} the \hspace{3pt}cluster\hspace{3pt} centers\hspace{3pt} v_{i}^{l} \hspace{5pt}using\left( \ref{cluster center}\right) \hspace{5pt}  and \hspace{4pt}U^{l} $ \\ 
+		\multicolumn{1}{c|}{} &$ update\hspace{4pt} U^{l} \hspace{3pt}with\hspace{3pt} \left( \ref{membership function}\right) \left( \ref{membership function1}\right)\hspace{3pt}  and\hspace{3pt}  v_{i}^{l}$ \\
+		\multicolumn{1}{c|}{} & $Compare\hspace{4pt} U^{l}\hspace{3pt} to \hspace{4pt} U^{l+1} \hspace{3pt} in \hspace{3pt}a \hspace{3pt}convenient\hspace{3pt}  matrix\hspace{3pt} norm: if\hspace{3pt} \parallel U^{l+1}-U^{l}\parallel\leq \epsilon \hspace{3pt}stop:$\\
+		\multicolumn{1}{c|}{} & $otherwise\hspace{3pt} return\hspace{3pt} to\hspace{3pt} step\hspace{3pt} 1.$  \\\hline 
+		
+	\end{tabular}
+\end{figure}
+
+The parameter\hspace{2pt} $\left[ 0<\epsilon\ll 1 \right] $\hspace{2pt} in Figure \ref{FCM Algorithm} must be chosen to be very small. The fuzzifier$\left( m\right)$  must be chosen cautiously to fit the data. The equation$\left( \ref{membership function1} \right) $ is used to account for the scarce occurrance of singularity$\left( \mathbf{x}_k=\mathbf{v}_i\right)$ where $d_{ik}=0,\hspace{2pt} u_{ik}$\hspace{2pt} assignments are spread over\hspace{2pt} $\mathbf{v}_{i}$\hspace{2pt} and \hspace{2pt}$u_{ik}$\hspace{2pt} in\hspace{2pt} $d_{ik}$\hspace{2pt} greater than \hspace{2pt}$0$ automatically become $0 \text{'s}$\cite{pal2005possibilistic}. It must be noted,
+\begin{subequations}
+	\begin{align}\label{FCM limit}
+		\lim_{m\rightarrow 1^+} \left\lbrace u_{ik}\right\rbrace = 
+		\left \{
+		\begin{aligned}
+			&1, &&  \hspace{10pt} d_{ik}\hspace{2pt} <\hspace{2pt} d_{jk}\hspace{3pt} \forall\hspace{2pt} j \neq i  \\
+			&0, &&  \hspace{10pt }\text{otherwise}
+		\end{aligned} \right.
+	\end{align}
+	and consequently,
+	\begin{equation}\label{FCM limit1}
+		\begin{split}
+				\lim_{m\rightarrow 1^+}\Bigg\{ \Bigg(\mathbf{v}_i&=\frac{\sum_{k=1}^{n}\left( u_{ik}\right) ^{m}\mathbf{x}_k}{\sum_{k=1}^{n}\left( u_{ik}\right) ^m}\Bigg)\Bigg\}\\ &= \frac{\sum_{k\in i}\mathbf{x}_k}{n_i}\\
+				&= \mathbf{\tilde v}_i ;\hspace{10pt} 1\leq i\leq c
+		\end{split}
+	\end{equation}
+	$\left( \ref{FCM limit}\right) $ and $\left( \ref{FCM limit1}\right) $ shows that cluster centroid moves closer to the general mean and hence FCM become crisply assigned with $u_{ik}=\left\lbrace 0,1\right\rbrace $ which results in Hard c-means (HCM) \cite{bezdek1981pattern}. This reason accounts for the choice of\hspace{2pt} $m$.
+\end{subequations}
+
+
+\chapter{Learning Vector Quantization}
+
+\section{Introduction to Learning Vector Quantization}
+T. Kohonen introduced Learning Vector Quantization(LVQ) as a prototype-based supervised learning model with the characteristics of being robust and intuitive\cite{kohonen2001learning}. LVQ presents an improvement to the nearest neighbor classifiers by introducing prototypes vectors that are learned and optimized to give improved results in classification\cite{kaden2014aspects}. Even though LVQ is characterized by producing optimal borders, it suffers a weakness of being heuristically inclined, and also, the instability reference vectors become a matter of concern in its application to most classification tasks\cite{kohonen2001learning,article}.
+
+
+Given a training set\hspace{2pt} $X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_N\right\rbrace \subseteq \mathbb{R}^n$\hspace{2pt} with its class labels\hspace{2pt} $c\left( \mathbf{x}\right)\in\mathcal{C}=\left\lbrace 1,2,\ldots, C\right\rbrace $,\hspace{2pt} we define a prototype set of vectors\hspace{2pt} $W=\left\lbrace \mathbf{w}_1,\mathbf{w}_2,\ldots,\mathbf{w}_M\right\rbrace\subseteq \mathbb{R}^n $\hspace{2pt} such that every\hspace{2pt} $\mathbf{w}\in W$\hspace{2pt} has a corresponding class\hspace{2pt} $c\left( \mathbf{w}\right)\in\mathcal{C} $.\hspace{2pt} The  training of prototype vectors is based on a competitive learning known as winner-takes-all rule$\left( \ref{winner takes all rule}\right)$  until the prototypes vectors become typical of the classes they represent.
+\begin{equation}\label{winner takes all rule}
+	S\left( \mathbf{x}\right) =\arg\min_k\hspace{3pt} d\left( \mathbf{x},\mathbf{w}_k\right) ,   1\leq k \leq M
+\end{equation}
+Consider data point\hspace{2pt} $\mathbf{x}$, the protype vectors\hspace{4pt}$\mathbf{w}_{ s\left( \mathbf{x}\right) }$\hspace{2pt} is strengthened if\hspace{2pt} $c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) $\hspace{2pt} and weakened if \hspace{2pt}$c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) $ \hspace{2pt}based on an update rule defined in $\left( \ref{update rule}\right)$ utilising $\left( \ref{strengthen or weaken}\right)$   and  a small but positive learning rate \hspace{2pt}$\eta$
+\begin{align}\label{strengthen or weaken}
+	\psi \left( c\left( \mathbf{x}\right) , c\left( \mathbf{w}_{ s\left( \mathbf{x} \right) }\right)\right) = 
+	\left \{
+	\begin{aligned}
+		&+1, &&  \hspace{10pt}c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) \\
+		&-1, &&  \hspace{10pt} c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)
+	\end{aligned} \right.
+\end{align}
+\begin{equation}\label{update rule}
+	\mathbf{w}_{t+1}=\mathbf{w}_{t} + \eta\psi\left( \mathbf{x}-\mathbf{w}_t\right) ;\hspace{10pt} \mathbf{w}_t=\mathbf{w}_{s\left( \mathbf{x}\right) } ; \hspace{10pt} 0<\eta\ll 1
+\end{equation}
+Though the standard Euclidean distance\hspace{2pt} $d\left( \mathbf{x},\mathbf{w}_k\right) $\hspace{2pt} is primarily utilized in LVQ, it is not limited to it, and that any standard dissimilarity measure is allowed if it fits the data set in question\cite{villmann2017can}.
+The heuristic inclination and the problem of instability of reference vectors led to the development of many LVQ variants\cite{kohonen2001learning}. A more mathematically inclined and generalized version is introduced by Sato and Yamada, which solved the afore-mentioned problems of LVQ \cite{sato1996generalized}.
+\section{Generalized Learning Vector Quantization}
+Sato and Yamada successfully present a generalized version of the LVQ variants, which employs the use of a cost function and an update rule that incorporates convergence conditions for prototype vectors\cite{sato1996generalized}. 
+
+Let\hspace{2pt} $d$\hspace{2pt} be any differentaible dissimilarity measure, \hspace{2pt}$\mathbf{w}^{+}$ \hspace{2pt}is the best matching correct prototype vector if\hspace{2pt} $c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)$
+and\hspace{2pt} $\mathbf{w}^{-}$\hspace{2pt} be the best matching incorrect prototype vector if\hspace{2pt} $c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)$\hspace{2pt} then a function\hspace{2pt} $\mu\left( \mathbf{x}\right)$\hspace{2pt} referred to as the classifier function is
+\begin{equation*}%remove
+	\mu \left( \mathbf{x}\right) =\frac{d\left( \mathbf{x},\mathbf{w}^{+}\right)-d\left( \mathbf{x},\mathbf{w}^{-}\right)  }{d\left( \mathbf{x},\mathbf{w}^{+}\right)+d\left( \mathbf{x},\mathbf{w}^{-} \right) }
+\end{equation*}
+$\mu\left( \mathbf{x}\right)\in\left[ -1,1\right], $ indicating\hspace{2pt} $d\left( \mathbf{x},\mathbf{w}^{+}\right)<d\left( \mathbf{x},\mathbf{w}^{-}\right)$\hspace{2pt} whenever classification is correct  meaning\hspace{2pt} $\mu\left( \mathbf{x}\right) $\hspace{2pt} is negative and incorrect classification indicates\hspace{2pt} $\mu\left( \mathbf{x}\right) $ \hspace{2pt}is positive. The cost function is given by,
+\begin{equation}\label{GLVQ cost fucntion}
+	J_{GLVQ}\left( X,W\right) =\sum_{i=1}^{n}f\left( \mu\left( \mathbf{x}_i\right) \right) 
+\end{equation}
+The non-linear activation function $f$, which increases monotonically, is usually chosen as the sigmoid function 
+\begin{align*}
+	f_t\left( \mathbf{x}\right) =\frac{1}{1+e^{\frac{-\mathbf{x}}{t}}} ;\hspace{10pt} t>0
+\end{align*}
+minimization of the cost function in  $\left( \ref{GLVQ cost fucntion}\right)$ is done using the stochastic gradient descent Learning (SGDL), and the update rules are given by $\left( \ref{GLVQ update}\right) $
+\begin{equation}\label{GLVQ update w+}
+	\begin{split}
+		\frac{\partial J}{\partial \mathbf{w}^+}&=\frac{\partial f}{\partial \mu}\cdot\frac{\partial \mu}{\partial d^{+}\left( \mathbf{x}\right)}\cdot\frac{\partial d^{+}\left( \mathbf{x}\right) }{\partial \mathbf{w}^{+}}\\ 
+		&= \frac{\partial f}{\partial \mu}\cdot\frac{-2d^{-}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) + d^{-}\left( \mathbf{x}\right) \right) ^2} \left( -2\right) \left( \mathbf{x}-\mathbf{w}^{+}\right) 	
+	\end{split} 
+\end{equation}
+Similarly,
+\begin{equation}\label{GLVQ upddate W-}
+	\begin{split}
+		\frac{\partial J}{\partial \mathbf{w}^-}&=\frac{\partial f}{\partial \mu}\cdot\frac{\partial \mu}{\partial d^{-}\left( \mathbf{x}\right)}\cdot\frac{\partial d^{-}\left( \mathbf{x}\right) }{\partial \mathbf{w}^{-}}\\
+		&= \frac{\partial f}{\partial \mu}\cdot\frac{2d^{+}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) + d^{-}\left( \mathbf{x}\right) \right) ^2} \left( -2\right) \left( \mathbf{x}-\mathbf{w}^{-}\right)
+	\end{split}
+\end{equation}
+
+from $\left( \ref{GLVQ update w+}\right)$  and $\left( \ref{GLVQ upddate W-}\right)$  we have the update rule $\left( \ref{GLVQ update}\right) $
+\begin{equation}\label{GLVQ update}
+	\Delta \mathbf{w}^{\pm}\propto\frac{-\partial f}{\partial \mu}\cdot\frac{\pm 2d^{\mp}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) +d^{-}\left( \mathbf{x}\right) \right)^2 }\cdot\frac{\partial d\left( \mathbf{x},\mathbf{w}^{\pm }\right) }{\partial \mathbf{w}^{\pm}}
+\end{equation}
+form Equations $\left( \ref{GLVQ update w+}\right)$  and $\left( \ref{GLVQ upddate W-}\right)$  we identify that the attraction and repulsion scheme used in LVQ  is also preserved  in GLVQ\cite{villmann2017can} .
+However, it must be noted that the dissimilarity measure employed in $\left( \ref{GLVQ update}\right)$  is the squared Euclidean distance\cite{sato1996generalized}.
+\section{Generalized Matrix Learning Vector Quantization}
+GLVQ provides a conceptual framework for which all generalized LVQ could be developed. The GLVQ requirement of using a differentiable dissimilarity measure chosen as the standard Euclidean distance in \cite{sato1996generalized} is not ideal for all problems\cite{villmann2017can}. The search for a dissimilarity that can work well for different data sets while keeping the generalization requirement of differentiability led to the introduction of Generalized Relevance Learning Vector Quantization (GRLVQ)\cite{article}. The dissimilarity measure used in GRLVQ is specified with relevant factors, which are learned in the same manner as prototypes in GLVQ\cite{article}. An advanced variant of the GRLVQ, which utilizes a full matrix of relevances in specifying the dissimilarity measure used in GLVQ, is introduced and referred to as Generalized Matrix Learning Vector Quantization (GMLVQ)\cite{article}.
+
+The dissimilarity measure in matrix-GLVQ is given by
+\begin{equation*}%remove
+	d_\Omega\left( \mathbf{x},\mathbf{w}\right)=\left( \mathbf{x}-\mathbf{w}\right) ^{T}\Omega^{T}\Omega\left( \mathbf{x}-\mathbf{w}\right) ;\hspace{10pt} \Omega \in \mathbb{R}^{m\times n},
+\end{equation*}
+when\hspace{2pt} $m$\hspace{2pt} is same as\hspace{2pt} $n$ ; matrix $\Lambda=\Omega^T \Omega \in \mathbb{R}^{n\times n}$  ; $\Omega$ \hspace{2pt}serves the purpose of a projection matrix\cite{villmann2017can}
+\begin{equation}\label{GMLVQ distance}
+	d_\Omega \left( \mathbf{x},\mathbf{w}\right) =\left( \Omega\left( \mathbf{x}- \mathbf{w}\right)\right) ^2
+\end{equation}
+with a positive definite matrix\hspace{2pt} $\Lambda$, $ \left( \ref{GMLVQ distance} \right)$ can be taken as the Euclidean distance.
+Given a classifier of the form
+\begin{equation*}%remove
+	\mu\left( \mathbf{x}\right) =\frac{d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)-d_\Omega\left( \mathbf{x},\mathbf{w}^{-}\right)  }{d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)+d_\Omega\left( \mathbf{x},\mathbf{w}^{-} \right) }
+\end{equation*}
+The extent of classification security is based on the level to which\hspace{2pt} $d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)<d_\Omega\left( \mathbf{x},\mathbf{w}^{-}\right)$\cite{article}.
+The cost function is given by
+\begin{equation}\label{GMLVQ costfunction}
+	J_{GMLVQ}\left( X,W\right) =\sum_{i=1}^{n}f\left( \mu\left( \mathbf{x}_i\right) \right) 
+\end{equation}
+Just like in GLVQ, the weights updation in $\left(  \ref{GMLVQ weight updation}\right)$ and the matrix adaptation in $\left( \ref{GMLVQ matrix adaptation}\right)$  is done simultaneously\cite{schneider2009adaptive} with the SGDL used in minimization of $\left( \ref{GMLVQ costfunction}\right)$
+\begin{equation}\label{GMLVQ matrix adaptation}
+	\Delta \Omega\propto \frac{-\partial f}{\partial \mu}\Bigg(  \frac{\partial \mu}{\partial d_{\Omega}^{+}\left( \mathbf{x}\right)}\cdot\frac{\partial d_{\Omega}^{+}\left( \mathbf{x}\right) }{\partial \Omega}+\frac{\partial \mu}{\partial d_{\Omega}^{-}\left( \mathbf{x}\right)}\cdot\frac{\partial d_{\Omega}^{-}\left( \mathbf{x}\right) }{\partial \Omega} \Bigg)
+\end{equation}
+\begin{equation}\label{GMLVQ weight updation}
+	\Delta \mathbf{w}^{\pm}\propto \frac{-\partial f}{\partial \mu}\cdot\frac{\pm 2d_{\Omega}^{\mp}\left( \mathbf{x}\right) }{\left( d_{\Omega}^{+}\left( \mathbf{x}\right) +d_{\Omega}^{-}\left( \mathbf{x}\right) \right)^2 }\cdot\frac{\partial d_{\Omega}\left( \mathbf{x},\mathbf{w}^{\pm }\right) }{\partial \mathbf{w}^{\pm}}
+\end{equation}
+
+
+\section{Cross-Entropy in Learning Vector Quantization}
+We refer to the same introduction and parameters  as used in GLVQ. Considering an information theoretic approach, the training set employed in the learning process comes along with probabilistic target class information given by \hspace{2pt}$(X,T) = \left\lbrace \mathbf{x}_i , \mathbf{t}_i\right\rbrace _{i=1}^{N}$ with\hspace{2pt} $\mathbf{t}_i$\hspace{2pt} being the probabilistic class targets satisfying the conditions\hspace{3pt}  $t_{ij}\in \left[ 0,1\right] $ \hspace{2pt}and \hspace{2pt}$\sum_{j}t_{ij} = 1$\cite{villmann2018probabilistic}.
+
+Given a data point \hspace{2pt}$\mathbf{x}\in X$,\hspace{2pt} consider the class probability vector\hspace{2pt} 
+$p\left( \mathbf{x}\right) =\left( p_{1}\left( \mathbf{x}\right)  ,\ldots,p_{C}\left( \mathbf{x}\right)\right)^{T}  $.\hspace{2pt} Assume a model class predictor\hspace{2pt} $p_{W}\left( \mathbf{x}\right) = \left( p_{W}\left( 1|\mathbf{x}\right) ,p_{W}\left( 2|\mathbf{x}\right) ,\ldots,p_{W}\left( C|\mathbf{x}\right)\right) ^{T} $\hspace{2pt} by Soft Learning Vector Quantization(SLVQ) analogy using model parameters from set\hspace{2pt} $W$.\hspace{2pt} The objective here is to clearly maximize the mutual information between \hspace{2pt}$p\left( \mathbf{x}\right) $\hspace{2pt} and \hspace{2pt}$p_{W}\left( \mathbf{x}\right) $\hspace{2pt}by minimizing the divergence between them\cite{villmann2018probabilistic}. Hence, a function that represents this divergence is,
+\begin{equation}\label{local errors}
+	L\left( X,W\right) = D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation}
+where the Kulbach-Liebler divergence is,
+\begin{equation*}%remove
+	D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)= H\left( p\left( \mathbf{x}\right)\right)  - Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation*}
+$H\left( p\left( \mathbf{x}\right)\right) $ \hspace{2pt}indicates Shanon entropy and\hspace{2pt} $Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right)$\hspace{2pt} indicates cross-entropy.
+It must be noted that alternative divergence such as the Renyi-$\alpha$-divergence may also be considered in this regard,
+\begin{equation}\label{Renyi-divergence}
+	D_{\alpha}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right) =\frac{1}{1-\alpha}\log\left( \sum_{k}\left( p_{k}\left( \mathbf{x}\right) \right) ^{\alpha}\cdot\left( p_{W}\left( k|\mathbf{x}\right) \right) ^{1-\alpha}\right) 	
+\end{equation}
+as $\alpha\rightarrow 1$ we have that
+\begin{align*}
+	D_{\alpha}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)\rightarrow D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)
+\end{align*}
+because the Shanon entropy is independent of the learning parameters, the local errors in $\left(\ref{local errors}\right) $ is minimized, taking into consideration only the cross-entropy
+\begin{equation}\label{cross entropy}
+	\frac{\partial}{\partial w}D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)=\frac{-\partial}{\partial w}Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation}
+
+\subsection{Soft Learning Vector Quantization}
+The primary aim is to model a soft class predictor that follows conventional learning vector quantization (prototype-based with Euclidean dissimilarity measure)\cite{seo2003soft,villmann2018probabilistic,kaden2014aspects}. Hence given\hspace{2pt} $\mathbf{x}\in X$,\hspace{2pt} the probability density is determined by 
+\begin{align}
+	P_{W}\left( \mathbf{x}\right) = \sum_{j=1}^{N}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right) 
+\end{align}
+where for prototype \hspace{2pt}$\mathbf{w}_{j}\in W$,\hspace{2pt} $p\left( \mathbf{w}_{j}\right)$\hspace{2pt} indicates the prior probability and\hspace{2pt} $p\left( \mathbf{x}|\mathbf{w}_{j}\right)$\hspace{2pt} indicates the probability of prototype\hspace{2pt} $\mathbf{w}_{j}$\hspace{2pt} to induce\hspace{2pt} $ \mathbf{x}$. 
+We incorporate fixed classes\hspace{2pt} $c\in\mathcal{C}$ \hspace{2pt} of the data point together with LVQ principles of best correct matching prototypes and best incorrect matching prototypes arriving at a joint probability density of the form
+\begin{equation}
+	P_{W}\left( \mathbf{x},c\right) = \sum_{j:c\left( \mathbf{w}_{j}\right) = c}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right)
+\end{equation}
+and 
+\begin{equation}
+	P_{W}\left( \mathbf{x},\neg c\right) = \sum_{j:c\left( \mathbf{w}_{j}\right) \neq c}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right)	
+\end{equation}
+referred to as the probability that\hspace{2pt} $\mathbf{x}$\hspace{2pt} is induced by a mixture of Gaussians with the correct class and the probability that\hspace{2pt} $\mathbf{x}$\hspace{2pt} is induced by a mixture of Gaussians with the incorrect class, respectively\cite{seo2003soft,villmann2018probabilistic}. Concerning Soft Learning Vector Quantization (SLVQ), 
+the cost function minimized by stochastic gradient descent learning is given by
+\begin{equation}\label{slvq cost}
+	L_{SLVQ}(X,W) = -\sum_{k}\ln\bigg(\frac{P_{W}(\mathbf{x}_{k},c_{k})}{P_{W}(\mathbf{x}_{k},\neg c_{k})}\bigg)
+\end{equation}
+and for Robust Soft Learning Vector Quantisation (RSLVQ),
+\begin{equation}\label{RSLVQ}
+	L_{RSLVQ}(X,W) = -\sum_{k}\ln\bigg(\frac{P_{W}(\mathbf{x}_{k},c_{k})}{P_{W}(\mathbf{x}_{k})}\bigg)
+\end{equation}
+where,
+\begin{equation}
+	P_{W}(\mathbf{x}_{k}) = P_{W}(\mathbf{x}_{k},c_{k}) + P_{W}(\mathbf{x}_{k},\neg c_{k}\big)
+\end{equation}
+In line with Seo and Obermayer\cite{seo2003soft},\hspace{2pt} $P_{W}(\mathbf{x}_{k})$\hspace{2pt} solves the problem of instability encountered whenever infinity  is attained by the cost function in (\ref{slvq cost}).
+The updates of prototypes for SLVQ is done using
+\begin{equation*}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}L_{SLVQ}(X,W) 
+\end{equation*}
+and in the case of RSLVQ,
+\begin{equation*}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}L_{RSLVQ}(X,W) 
+\end{equation*}
+
+
+%\begin{align}
+%	\frac{\partial}{\partial \mathbf{w}_{l}}L_{RSLVQ}(X,W) = \frac{\partial}{\partial \mathbf{w}_{l}}\ln P_{W}(\mathbf{x}_{k},c_{k}) - \frac{\partial}{\partial \mathbf{w}_{l}}\ln \big( P_{W}(\mathbf{x}_{k},c_{k}) + P_{W}(\mathbf{x}_{k},\neg c_{k}\big)
+%\end{align}
+
+
+
+\subsection{Robust Soft Learning Vector Quantization  with Cross-Entropy Optimization}
+GLVQ, including its variants together with many other prototype-based classifiers, are generally accepted to be highly robust and involve the optimization of the classification error to attain classification results that are highly intrepretable\cite{kaden2014aspects}. A version of LVQ which utilizes the cross-entropy maximization, motivated by information-theoretic principles, is introduced as a generalization of RSLVQ\cite{villmann2018probabilistic}. 
+Hence the cost function of the form,
+\begin{equation*}%remove
+	E_{}\left( X,W\right) =\sum_{\mathtt{x}}D_{KL}\left( t\left( \mathbf{x}\right) ||p_{W}\left(\mathbf {x}\right) \right) 
+\end{equation*}
+from the cross-entropy in $\left(\ref{cross entropy}\right) $. Considering a relation of this model based on prototypes\hspace{2pt} $W=\left\lbrace \mathbf{w}_{1},\mathbf{w}_{2},\ldots,\mathbf{w}_{N}\right\rbrace $ \hspace{2pt}and class responsibilities\hspace{2pt} $c\left( \mathbf{w}_{k}\right)$\hspace{2pt} we have,
+\begin{equation*}%remove
+	Cr_{W}\left( \mathbf{x}\right) =\sum_{c=1}^{C}t_{c}\left( \mathbf{x}\right) \cdot\log\left( p_{W}\left(c|\mathbf{x}\right) \right)  
+\end{equation*}
+ and using the  model class prediction probability from SLVQ,
+\begin{align*}
+	p_{W}\left( c|\mathbf{x}\right)=\frac{P_{W}\left( \mathbf{x},c\right) }{P_{W}\left( \mathbf{x}\right) }
+\end{align*}
+with
+\begin{align*}
+	P_{W}\left( \mathbf{x},c\right) &= \sum_{j:c\left( \mathbf{w}_{j}\right) = c}\exp\left( -d_{\Omega}\left( \mathbf{x},\mathbf{w}_{j}\right) \right)\\
+	&= \sum_{j:c\left( \mathbf{w}_{j}\right) = c}\exp\left(-\left( \Omega\left( \mathbf{x}- \mathbf{w}_{j}\right)\right) ^2 \right)
+\end{align*}
+and 
+\begin{align*}
+	P_{W}\left( \mathbf{x}\right) &= \sum_{l}\exp\left( -d_{\Omega}\left( \mathbf{x},\mathbf{w}_{l}\right) \right)\\
+	&=\sum_{l}\exp\left(-\left( \Omega\left( \mathbf{x}- \mathbf{w}_{l}\right)\right) ^2 \right)
+\end{align*}
+we indicate that,\hspace{2pt} $d_{\Omega}\left( \mathbf{x},\mathbf{w}_{j}\right)$\hspace{2pt} for all\hspace{2pt} $\mathbf{w}_{j}\in W$\hspace{2pt} follows the analogy of the dissimilarity measure utilized in GMLVQ.
+We have the cross-entropy presented as
+\begin{align}\label{cross entropy 2}
+	Cr_{W}\left( \mathbf{x}\right) =\sum_{c=1}^{C}t_{c}\left( \mathbf{x}\right) \cdot\log\left( \frac{P_{W}\left( \mathbf{x},c\right) }{P_{W}\left( \mathbf{x}\right) } \right) 
+\end{align}
+From the results in $\left(\ref{cross entropy 2}\right) $,\ is a generalization RSLVQ\cite{villmann2018probabilistic}.
+Concerning mutually exclusive training data, the cost function approaches RSLVQ cost function\cite{villmann2018probabilistic}. We account for this by considering\hspace{2pt} $t_{ij}\in\left\lbrace 0,1\right\rbrace  $\hspace{2pt} together with \hspace{2pt}$\sum_{j}t_{ij}=1$, \hspace{2pt}when we assume the target probability accross the classes is mutually exclusive. So considering one prototype per class,\hspace{2pt} $t_{c}\left( \mathbf{x}\right) = 1$\hspace{2pt} in (\ref{cross entropy 2}) arriving at the same cost functon (\ref{RSLVQ}) for RSLVQ.\\ Mathematically, we have
+\begin{equation*}
+	p\left( t_{i}| \mathbf{x}_{i} \right) = \prod_{j=1}^{C}p_{j}\left( \mathbf{x}_{i}\right) ^{t_{ij}}
+\end{equation*}
+and 
+\begin{equation*}
+	p\left( c_{i}| \mathbf{x}_{i} \right) = \prod_{j=1}^{C}\left( p_{W}\left( j,\mathbf{x}_{i}\right)\right) ^{t_{ij}}
+\end{equation*}
+referred to as the true conditional target probabilty for\hspace{2pt} $\mathbf{x}_{i}$\hspace{2pt} and model target conditional probability for \hspace{2pt}$\mathbf{x}_{i}$ \hspace{2pt}respectively expressed as multinomial distributions\cite{villmann2018probabilistic}. We further consider the log-likelihood ratio
+\begin{equation*}
+	\log \frac{p\left( T|X\right) }{p_{W}\left( C|X\right) } = \log \bigg(\prod_{i=1}^{N}\frac{p\left( t_{i}|\mathbf{x}_{i}\right) }{p_{W}\left( c_{i}|\mathbf{x}_{i}\right)}\bigg)
+\end{equation*}
+expanded as
+\begin{align*}
+	&= \sum_{i=1}^{N}\log\left( p\left( t_{i}|\mathbf{x}_{i}\right)\right) - \sum_{i=1}^{N}\log\left( p_{W}\left( c_{i}|\mathbf{x}_{i}\right)\right) \\
+	&=\sum_{i=1}^{N}\sum_{j=1}^{C}t_{ij}\log\left( p_{j}\left( \mathbf{x}_{i}\right) \right)- \sum_{i=1}^{N}\sum_{j=1}^{C}t_{ij}\log\left( p_{W}\left(j| \mathbf{x}_{i}\right) \right)
+\end{align*}
+and we have the form observed in (\ref{local errors}) below
+ \begin{align*}
+ 	=\sum_{i=1}^{N}H\left( t_{i}\right)  - Cr\left( t_{i},p_{W}\left( \mathbf{x}_{i}\right) \right) 
+ \end{align*}
+The cross-entropy is minimized for gradient descent learning with respect to parameter\hspace{2pt} $W$\hspace{2pt}  as \hspace{2pt}$\frac{\partial}{\partial \mathbf{w}_{l}}Cr_{W}\left( \mathbf{x}\right)$\hspace{2pt} and the prototype updates are done using,
+\begin{equation}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}Cr_{W}\left( \mathbf{x}\right)
+\end{equation}
+
+
+
+%\section{Cross-Entropy Method Generalized Learning Vector Quantization}
+%The incorporation of a cost function approach that is continuous and differentiable together with convergence conditions into the reference vectors update rule of GLVQ remains a groundbreaking feat in the LVQ family of advanced prototype-based classification algorithms\cite{sato1996generalized}. Even though developments in such regard have achieved excellent generalization ability and optimal classification results, a vital point worthy of discussion is the prototype initialization problem associated with the use of GLVQ\cite{boubezoul2008application}. The optimization in this area only seeks to achieve convergence at the global minima, which in theory and practice is linked to optimal classification results for prototype-based models but this scenario remains a challenge whenever the optimization gets stacked in the local minima, which is precisely the case for GLVQ\cite{boubezoul2008application}. Cross-Entropy Method Generalized Learning Vector Quantization has been discovered to overcome the problem associated with prototype initialization sensitiveness of GLVQ\cite{boubezoul2008application}.
+
+%Given an optimization task, the challenge here would be to search for the optimal set of parameters $W$ to which the cost function in $\left( \ref{GLVQ cost fucntion}\right)$  can be minimized. 
+%\begin{equation*}
+%	\gamma^{\ast} = \min\limits_{\mathbf{w}\in W}J\left( \mathbf{w}\right) 
+%\end{equation*}
+%Two key iterative steps are considered\cite{boubezoul2008application}\cite{kroese2006cross},
+%\begin{enumerate}
+%	\item  Generate sample prototypes using a\hspace{2pt} $p(.; \mathbf{v})$\hspace{2pt} and choose the best of these samples
+%	\item  Using the parameter\hspace{2pt} $\mathbf{v}$ update the distribution family by utilizing best samples selected in $(1)$. Repeate until convergence.
+%\end{enumerate}
+%The goal is to extend the search spectrum to which an optimal set of parameters can be obtained\cite{kroese2006cross}. 
+%The Cross-entropy method is applied in the optimization of GLVQ by ensuring the set of parameters to which the GLVQ cost function is minimized are generated by a Gaussian distribution given by way of a respective\hspace{2pt} $\left(d\times P \right)$\hspace{2pt} matrix with components obtained by 
+%\begin{equation*}
+%	W^{l}\triangleq W^{l}_{pq} \sim \mathcal{N}t(m_{pq}^{t},(\sigma_{pq}^{t})^2,a_{p},b_{p})
+%\end{equation*}
+%for 
+%\begin{equation*}
+%	l=1,...,V ;\hspace{10pt} p=1,...d\hspace{10pt} \text{and}\hspace{10pt}q=1,...,P
+%\end{equation*}
+%where the mean  and variance of the $pqth$ components at iteration\hspace{2pt} $t$\hspace{2pt} is indicated by\hspace{2pt} $m^{t}_{pq}$ \hspace{2pt} and\hspace{2pt} $ \left( \sigma^{t}_{pq}\right) ^{2}$ respectively with the lower and upper bounding box to which all data points are covered per dimension is indicated by\hspace{2pt} $a_{p}$\hspace{2pt}  and\hspace{2pt} $b_{p}$\cite{boubezoul2008application}.
+%The lower and upper bounding box as used in pragmatic terms is given by
+%\begin{equation*}
+%	a_{p} = K\min\limits_{j = 1,...,N}\left\{\mathbf{x}_{jp}\right\}
+%\end{equation*}
+%\begin{equation*}
+%	b_{p} = K\max\limits_{j = 1,...,N}\left\{\mathbf{x}_{jp}\right\}
+%\end{equation*}
+%where $K$ is greater or equal to  1 \cite{boubezoul2008application}.
+%The smoothed updates of generating parameters in the Generic cross-entropy algorithm and the multi-extremal version as used in GLVQ are given respectively by 
+%\begin{equation*}
+%	\widehat{\mathbf{v}}_{t} = \alpha\widetilde{\mathbf{v}}_{t} + (1-\alpha)\widehat{\mathbf{v}}_{t-1} ;
+%\end{equation*}
+%\begin{equation}\label{dynamic smoothing}
+%	\beta_{t} = \beta_{0} - \beta_{0}\left(1-\frac{1}{t}\right)^{c} 
+%\end{equation}
+%where 
+%\begin{equation}
+%	 0\leqslant \alpha \leqslant 1 ;\hspace{10pt}  0.8\leqslant \beta_{0}\leqslant 0.99 ; \hspace{10pt}5\leqslant c \leqslant 15
+%\end{equation}
+%with\hspace{2pt} $\beta_{0} $\hspace{2pt} as used here refers  to a large smoothing constant,\hspace{2pt} $c$\hspace{2pt} chosen as a small integer and \hspace{2pt}$\alpha$\hspace{2pt} is a fixed smoothing parameter\cite{boubezoul2008application}.
+%The avoidance of optimization getting stuck in a local minima coupled with the effect of poor convergence remains the critical account for which the smoothing is done\cite{boubezoul2008application,kroese2006cross}. Consequently, for viability, the selection of variance must be made regarding a broad search spectrum to overcome the unwanted effect of the initial choice of parameters noting that updates for the variance as used in the case of GLVQ in $\left( \ref{dynamic smoothing}\right)$  is referred to as dynamic smoothing\cite{kroese2006cross}. 
+
+%A summary of this process is shown below for the Prototypical Cross-Entropy Algorithm in Figure \ref{CE Algorithm}  and Cross-Entropy Algorithm for GLVQ in Figure \ref{CE Algorithm for GLVQ} respectively.
+%\begin{figure}[h]
+%	\centering
+%	\caption{Cross-Entropy Algorithm\cite{kroese2006cross}}\label{CE Algorithm}
+%	
+%	\begin{tabular}{ l l }
+%		\cline{1-2}  \hline
+%		
+%		\multicolumn{1}{c}{\emph{}} &\multicolumn{1}{c}{Prototypical Cross-Entropy Algorithm for optimization $$  } \\ \hline
+%		\multicolumn{1}{c}{(1)} & Choose some\hspace{2pt} $\hat{\mathbf{v}}_{0}\in \mathbf{\vartheta}$.\hspace{2pt} Set\hspace{2pt} $t=1$ (level counter)  \\ 
+%		\multicolumn{1}{c}{(2)} & Generate samples\hspace{2pt} $\mathbf{w}^{1},...,\mathbf{w}^{V}$ \hspace{2pt}from the density$\hspace{2pt}p(.;\hat{\mathbf{v}}_{t-1})$ and compute the \hspace{2pt}$\rho$-quantile \\ 
+%		\multicolumn{1}{c}{} &$\widehat{\gamma}_{t-1}$\hspace{2pt} of the samples scores.\\ 	
+%		\multicolumn{1}{c}{(3)} & Use the same samples to solve the stochastic program by: \\ 
+%		\multicolumn{1}{c}{} &$\underset{\mathbf{v}}{\max}\hspace{2pt}  \widehat{D}(\mathbf{v}) =\underset{\mathbf{v}} {\max}\left\{{\frac{1}{V}\sum_{l=1}^{V}I_{J(\mathbf{v}^{l})\leq\widehat{\gamma}_{t-1}}\ln p(\mathbf{w}^{l};\mathbf{v})}\right\}$  \\
+%		\multicolumn{1}{c}{} & Denote the solution by \hspace{2pt}$\tilde{\mathbf{v}}_{t}$ \\
+%		\multicolumn{1}{c}{(4)} & If predefined stopping criteria is met, then stop; otherwise set $$\\
+%		\multicolumn{1}{c}{} & $t=t+1$ \hspace{2pt}reiterate from step 2 \\\hline 
+%		
+%	\end{tabular}
+	
+%\end{figure}
+%
+%\begin{figure}[h]
+%	\centering
+%	\caption{Cross-Entropy Algorithm for GLVQ\cite{boubezoul2008application}}\label{CE Algorithm for GLVQ}
+%	
+%	\begin{tabular}{ l l }
+%		\cline{1-2}  \hline
+%		
+%		\multicolumn{1}{c}{\emph{}} &\multicolumn{1}{c}{Cross-Entropy Algorithm for GLVQ optimization $$  } \\ \hline
+%		\multicolumn{1}{c}{(1)} & Choose some initial\hspace{2pt} $\left\{M^0,\sum^0\right\} $ \hspace{2pt}for\hspace{2pt} $ p=1,...,d,\hspace{2pt} q=1,...,P.$\hspace{2pt} Set\hspace{2pt} $t=1$  \\ 
+%		\multicolumn{1}{c}{} & (level counter) \\                                                             
+%		\multicolumn{1}{c}{(2)} & Draw samples\hspace{2pt} $W^{l} \sim \mathcal{N}t(M^{(t-1)},\sum^{(t-1)},a_{p},b_{p}),$\hspace{2pt} $ l=1,...,V. $ \\ 
+%		\multicolumn{1}{c}{(3)} & Compute\hspace{2pt} $S^{l}=J_{GLVQ}(X;W^{l})$\hspace{2pt} scores by applying $(\ref{GLVQ cost fucntion})$ $\forall\hspace{2pt} l$.\\ 	
+%		\multicolumn{1}{c}{(4)} & Sort\hspace{2pt} $S^{l}$\hspace{2pt} in ascending order and denote by\hspace{2pt} $I$\hspace{2pt} the set of corresponding \\ 
+%		\multicolumn{1}{c}{} & indices. Let us denote $\left(\widetilde{M}^{(t-1)},\left(\widetilde{\sum}^{(t-1)}\right)^2\right)$ the mean and the variance\\
+%		\multicolumn{1}{c}{} & of the best\hspace{2pt} $\lceil \rho V\rceil\hspace{2pt} $ prototypes elite samples of\hspace{2pt} $\left\{W^{I(l)}\right\},\hspace{2pt} l = 1,...,\lceil \rho V\rceil$ \\
+%		\multicolumn{1}{c}{} & respectively.\\
+%		\multicolumn{1}{c}{(5)} & $\widehat{M}^{t} = \alpha\widetilde{M}^{t} + (1-\alpha)\widehat{M}^{t-1},\hspace{3pt} \widehat{\sum}^{t} =\beta_{t}\widetilde{\sum}^{t} + (1-\beta_{t})\widehat{\sum}^{(t-1)}$ \\
+%		\multicolumn{1}{c}{(6)} & If convergence is reached or\hspace{2pt} $t=T$ ($T$ denote the final iteration), then \\
+%		\multicolumn{1}{c}{} & stop; otherwise set\hspace{2pt} $t = t + 1$ and reiterate from step 2. \\\hline 
+%		
+%	\end{tabular}
+%	
+%\end{figure}
+
+\newpage
+
+\section{Classification Label Security/Certainty}
+
+We consider a training set\hspace{2pt} $X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_N\right\rbrace \subseteq \mathbb{R}^n$\hspace{2pt} with its class labels\hspace{2pt} $c\left( \mathbf{x}\right)\in\mathcal{C}=\left\lbrace 1,2,\ldots, C\right\rbrace $,\hspace{2pt} we define a prototype set of vectors\hspace{2pt} $W=\left\lbrace \mathbf{w}_1,\mathbf{w}_2,\ldots,\mathbf{w}_M\right\rbrace\subseteq \mathbb{R}^n $\hspace{2pt} such that every\hspace{2pt} $\mathbf{w}\in W$ \hspace{2pt}has a corresponding class \hspace{2pt}$c\left( \mathbf{w}\right)\in\mathcal{C}$.\hspace{2pt} We divide the training set into the train and test sets, respectively. Using the train set along with standard LVQ training procedure, the learned prototypes \hspace{2pt}$\mathbf{w}_{k}\in W$ \hspace{2pt}together with its classes \hspace{2pt}$c\left( \mathbf{w}_{k} \right) $ \hspace{2pt} are accessed and applied in accordance with the fuzzy probabilistic assignments of FCM described in $\left( \ref{membership function}\right) $\ to determine the classification label security of the test set. So for test data, the classification label security is calculated and returned accordingly. 
+
+We further consider the utilization of the computed classification label securities to determine reject classification and non-reject classification strategy\cite{hanczar2019performance}. Advancing in this regard, we consider a test sample \hspace{2pt}$\mathbf{x}_{k}\subseteq \mathbb{R}^n$\hspace{2pt} for all\hspace{2pt} $1\leq k \leq N$, a given model classifier function indicated by\hspace{2pt} $M_{c}$\hspace{2pt} and the computed classification label security of\hspace{2pt} $\mathbf{x}_{k}$\hspace{2pt} indicated by\hspace{2pt} $u_{ik}$,\hspace{2pt} $1\leq i \leq |\mathcal{C}|$\hspace{2pt} and define a non-reject classification strategy based on
+\begin{equation}\label{non reject classification}
+	M_{c}(\mathbf{x}_{k}) = c_{i}\in\mathcal{C} \hspace{3pt} \arg\max_i\hspace{2pt}\left\lbrace u_{ik}\right\rbrace 
+\end{equation}
+and a reject classification strategy based on 
+\begin{align}\label{reject classification strategy}
+	 	M_{c}(\mathbf{x}_{k})= 
+	\left \{
+	\begin{aligned}
+		&r, &&  \hspace{10pt}if\hspace{5pt}u_{ik}< h\hspace{10pt} \forall\hspace{2pt} i  \\
+		&c_{i}\in\mathcal{C}, &&  \hspace{10pt}\arg\max_i\hspace{2pt}\left\lbrace u_{ik}\right\rbrace \hspace{10pt}\text{otherwise}
+	\end{aligned} \right.
+\end{align}
+with an extended class set\hspace{2pt} $\mathcal{C}^{\ast} = \mathcal{C}\cup \left\lbrace r\right\rbrace  $\hspace{2pt} where the decision to reject is indicated by\hspace{2pt} $r$\hspace{2pt} based on a fixed but arbitrarily choosen threshold classification label security \hspace{2pt}$h$,\hspace{2pt} $0\leq  h \leq 1$\cite{hanczar2019performance}.
+
+
+The average model classification certainty which indicates regions in the data space where the model is confident with respect to the prototypes is indicated by  
+\begin{equation*}\label{model certainty}
+\zeta(X,W) = \frac{1}{|W|}\sum_{\mathbf{w}\in W}(\zeta_{\mathbf{w}}(X))
+\end{equation*}
+where $\zeta_{\mathbf{w}}(X)$\hspace{2pt} in $\left( \ref{prototype certainty}\right) $ measures the classification certainty of respective prototype\hspace{2pt} $\mathbf{w}$ and class responsibilities\hspace{2pt} $c \left(\mathbf{w}\right) $ with regards to equation $\left( \ref{reject classification strategy}\right)$  \cite{villmann2018probabilistic} 
+\begin{equation}\label{prototype certainty}
+\zeta_{\mathbf{w}}(X) = \frac{|\left\{\mathbf{x}\in X|\mathbf{w} = \mathbf{w}_{s(\mathbf{x})}\wedge c(\mathbf{x}) = c(\mathbf{w}_{s(\mathbf{x})})\right\}|}{|\left\{\mathbf{x}\in X|\mathbf{w} = \mathbf{w}_{s(\mathbf{x})}\right\}|}
+\end{equation}
+The behavior of the models concerning the test accuracy \hspace{2pt}$Acc$\hspace{2pt} and the  adjusted test accuracy\hspace{2pt} $Acc_{h} $\hspace{2pt} not including rejected classification based on a given threshold security \hspace{2pt}$h$\hspace{2pt} will also be investigated with
+\begin{equation}\label{model accuracy}
+	Acc_{h} = \frac{|\left\{\mathbf{x}\in X|\ c(\mathbf{x}) = c(\mathbf{w}_{s(\mathbf{x})})\right\}|}{| X|}
+\end{equation}
+for accuracy consideration disregarding any rejected classification, we drop the threshold security\hspace{2pt}\ $h$.
+The model classification certainty\hspace{2pt} $\zeta(X,W)$\hspace{2pt}  will be utilized as the primary metric to evaluate the confidence of the GLVQ, GMLVQ and CELVQ models used in this thesis for the determination of the classification label security.
+%\begin{equation}\label{reject certainty}
+	%Accuracy(X) = \frac{|\left\{\mathbf{x}\in X|\hspace{2pt}M_{c}(\mathbf{x}) = c(\mathbf{x})\hspace{2pt}\wedge\hspace{2pt}  M_{c}(\mathbf{x})\neq r \right\}|}{|\left\{\mathbf{x}\in X|\hspace{2pt}M_{c}(\mathbf{x}) \neq r\right\}|}
+%\end{equation}
+
+
+\chapter{Experimental Results}
+
+\section{General Overview of Train/Test Procedure }
+A standard and generally accepted procedure in machine learning for model training and testing involve demarcating the data set under consideration into a train set and test set. The ratio of the demarcation puts more weight on the train set than the test set. A good model should endure vigorous training with much of the data set in order to capture a reasonably representable variance per the patterns present in the data set with the remainder of a relatively sizeable unused data points tested on the model to evaluate how well the model can predict with new data points.
+
+A significant way forward will be to have a fair explorable insight of the data points in the data set under study. This will lead to the decision on which data scaling procedure to apply to the data set.
+In this thesis, all data sets used in the experimentation were split into the train-test ratio of $4:1$. The data sets were normalized  with  $\left( \ref{standardization}\right)$ in the data preparation stage.
+\begin{equation}\label{standardization}
+	\mathbf{x}_{s}=\frac{\mathbf{x}-\text{mean}(\mathbf{x})}{\text{standard deviation}(\mathbf{x})}
+\end{equation} 
+$\mathbf{x}_{s}$\hspace{2pt} is the normalized vector and \hspace{2pt}$\mathbf{x}$\hspace{2pt} is the unnormalized vector.
+The train set is first fitted and transformed with the standard feature scaler in  $\left( \ref{standardization} \right) $  whilst the mean$\left(\mathbf{x} \right)$ \hspace{2pt}of the train set  and the standard deviation$\left(\mathbf{x}\right)$  of the train set is used to transform the test set. Generally, this is done to disallow information passage into the model during the testing stage.
+The split must be done to ensure that the training and test sets are mutually disjoint sets.
+
+
+\section{Iris Data Set}
+The Iris data set\cite{fisher1936use} is used in this thesis to determine the classification label security by taking into account the fuzzy probabilistic assignment of FCM estimates. This data set is chosen primarily to reflect its prolific usage for most machine learning implementation schemes. The Iris data set holds an unchallenged position of fame in the machine learning community and remains well understood in such regard. The data set has 150 data points present with three uniform classes, each containing 50 data points with four features, namely sepal length in cm, sepal width in cm, petal length in cm and petal width in cm. The three classes are referred to as Iris Setosa, Iris Versicolour and Iris Virginica.
+
+
+
+\section{Classification Label Security of Iris Data set}
+The Iris data set is normalized as described in $\left( \ref{standardization}\right) $  and in-line with standard train-test procedure, the train samples consists of $80\%$ of the total data points, with the remaining $20\%$ used as test samples. The prototypes initialization is done uniformly across all three classes with one prototype per class. Training is realized using batches with 32 samples for 100 maximum epochs with $\eta =0.01$. The training of the Iris train set was realized using the python implementation\cite{Ravichandran2020}.
+The learned prototypes were accessed and used to determine the classification label security of the Iris test set. The GLVQ, GMLVQ and CELVQ models were employed in the learning and classification of the Iris data set. A summary of computed results that indicate the adjusted test accuracy with and without rejected classifications for the GLVQ, GMLVQ and CELVQ models is summarised in Table \ref{tab:Iris summary2}. The model classification certainty is summarised in Table \ref{tab:Iris summary} and \ref{tab:Iris summary1}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|c|  }
+		\hline
+		\multicolumn{5}{|c|}{Model classification certainty of the Iris test set} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $   & $\zeta_{\mathbf{w}}^{1}(X)$ &$\zeta_{\mathbf{w}}^{2}(X)$  &$\zeta(X,W)$   \\
+		\hline
+		GLVQ & 1.00 &0.69  & 0.89 &0.860  \\
+		GMLVQ &1.00 &0.69  &0.88 &0.857   \\
+		CELVQ  &1.00 &0.69  &0.89 & 0.860   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the Iris test set]{\label{tab:Iris summary}This table contains a summary of the model classification certainty of the Iris test set with non-reject classification.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $,\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{2}(X)$\hspace{2pt} indicates the classification certainty of the model prototypes with respect to the Iris Setosa, Iris Versicolour and Iris Virginica classes. The average model classification certainty for the Iris test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+	
+
+\end{table}
+
+
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|c|  }
+		\hline
+		\multicolumn{5}{|c|}{Model classification certainty of the Iris test set $(h=0.7)$} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $   & $\zeta_{\mathbf{w}}^{1}(X)$ &$\zeta_{\mathbf{w}}^{2}(X)$  &$\zeta(X,W)$   \\
+		\hline
+		GLVQ &1.00   &1.00  &1.00  &1.00  \\
+		GMLVQ &1.00  &0.69  &1.00  &0.90   \\
+		CELVQ &1.00  &1.00  &1.00 &1.00  \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the Iris test set with threshold security]{\label{tab:Iris summary1}This table contains a summary of the model classification certainty of the Iris test set with reject classification based on a threshold classification label security of 0.7.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $,\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{2}(X)$\hspace{2pt} indicates the classification certainty of the model prototypes with respect to the Iris Setosa, Iris Versicolour and Iris Virginica classes. The average model classification certainty for the Iris test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|  }
+		\hline
+		%\multicolumn{3}{|c|}{Model classification certainty of the Iris test set $(h=0.7)$} \\
+		%\hline
+		Model & Test Accuracy $(Acc)$ & Adjusted Test Accuracy $(Acc_{h})$   \\
+		\hline
+		GLVQ &0.83   &1.00   \\
+		GMLVQ &0.83  &0.84   \\
+		CELVQ &0.83  &1.00   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification test accuracy of the Iris test set]{\label{tab:Iris summary2}This table contains a summary of the model classification test accuracy of the Iris test set based on a non-reject classification\hspace{2pt}$(\ref{non reject classification})$\hspace{2pt} and a reject classification\hspace{2pt} $(\ref{reject classification strategy})$\hspace{2pt} based on a threshold classification label security\hspace{2pt} $(h=0.7)$.\hspace{2pt}}
+\end{table}
+By the estimates in Table \ref{tab:Iris summary}, \ref{tab:Iris summary1} and \ref{tab:Iris summary2} we can infer how accurate the models are when they are confident regarding the predictions made. In other words, the certainty with which the models (GLVQ, GMLVQ and CELVQ) made the observed classifications from the Iris test set. We relate this to the computed classification label securities and observe by way of visualization (Figures \ref{fig:igd1}, \ref{fig:igmd1} and \ref{fig:icd1}), regions in the Iris data space where the models (GLVQ, GMLVQ and CELVQ) are confident or unconfident about the classification labels. We further explore Figure \ref{fig:igd1} to Figure \ref{fig:icd1} where we can determine for any arbitrarily chosen threshold, regions in the data space where the models are confident or unconfident about the classification labels. The utilization of reject classification strategy $\left( \ref{reject classification strategy}\right) $ was able to improve the model classification certainty both at the class and overall level.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/iris3/gtr"}
+	\caption[Iris train set with GLVQ prototypes]{Iris train set with GLVQ prototypes and decision boundary}
+	\label{fig:ig1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/iris3/gt"}
+	\caption[Iris test set with GLVQ prototypes]{Iris test set with GLVQ prototypes and decision boundary}
+	\label{fig:ig2}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris1/igld1"}
+	%\caption[Iris test set classification label security (GLVQ)]{The data space of the Iris test set showing the GLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:igd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gf"}
+	\caption[Iris test set classification label security (GLVQ)]{The data space of the Iris test set showing the GLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:igd1}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n/iris glvqf"}
+	%\caption[Iris test set classification label security (GLVQ)]{The data space of the Iris test set showing the GLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:glvqf}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmtr"}
+	\caption[Iris train set with GMLVQ prototypes]{Iris train set with GMLVQ prototypes and decision boundary}
+	\label{fig:igm1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmt"}
+	\caption[Iris test set with GMLVQ prototypes]{Iris test set with GMLVQ prototypes and decision boundary}
+	\label{fig:igm2}
+\end{figure}
+
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris1/igmld"}
+	%\caption[Iris test set classification label security (GMLVQ)]{The data space of the Iris test set showing the GMLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:igmd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmf"}
+	\caption[Iris test set classification label security (GMLVQ)]{The data space of the Iris test set showing the GMLVQ model computed label securities with a threshold security $(h=0.7)$.}
+	\label{fig:igmd1}
+\end{figure}
+
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n/iris gmlvqf"}
+	%\caption[Iris test set classification label security (GMLVQ)]{The data space of the Iris test set showing the GMLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:gmlvqf}
+%\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/iris3/ctr"}
+	\caption[Iris train set with CELVQ prototypes]{Iris train set with CELVQ prototypes and decision boundary}
+	\label{fig:ic1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/iris3/ct"}
+	\caption[Iris test set with CELVQ prototypes]{Iris test set with CELVQ prototypes and decision boundary}
+	\label{fig:ic2}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris1/iced"}
+	%\caption[Iris test set classification label security (CELVQ)]{The data space of the Iris test set showing the CELVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:icd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/cf"}
+	\caption[Iris test set classification label security (CELVQ)]{The data space of the Iris test set showing the CELVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:icd1}
+\end{figure}
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n/iris celvqf"}
+	%\caption[Iris test set classification label security (CELVQ)]{The data space of the Iris test set showing the CELVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:celvqf}
+%\end{figure}
+
+From the results in Tables \ref{tab:Iris summary} and \ref{tab:Iris summary1}, we observe for all the three models (GLVQ, GMLVQ and CELVQ) that, the model classification certainty with and without rejected classifications for the Iris Setosa class was\hspace{2pt} $1.0$\hspace{2pt}. By referring to Figures \ref{fig:igd1}, \ref{fig:igmd1} and \ref{fig:icd1}, we can determine for sure whether this recorded certainty and the level of confidence in the regions of the Iris Setosa class labels were in agreement or not. So for an arbitrarily chosen label security threshold of\hspace{2pt} $0.7$, we observe that most of the classification labels in the region for the Iris Setosa class had very high label securities. This analogy applies to the observed certainties of the Iris Versicolour and Iris Virginica class as well. The utilization of reject classification strategy $\left( \ref{reject classification strategy}\right) $ was able to improve the test accuracy for all the models. By this implementation, we have determined the extent to which the predicted labels of the Iris test can be trusted.
+
+
+
+\section{Breast Cancer Wisconsin (Diagnostic) Data set (WDBC)}
+This thesis proceeds to test the implementation of the determination of the classification label security on the well-acclaimed WDBC data set\cite{street1993nuclear}, encompassing 569 data points along with 30 numeric, predictive attributes (specified by the mean, standard error and worst). So for each data point, measurements are made under the attributes designations: radius, texture, perimeter, area, smoothness, compactness, concactivity, concave points, symmetry and fractal dimension. Two classes, namely WDBC-Malignant and WDBC-Benign, are primarily considered with somewhat relatively homogeneous class distributions in the ratio of  212:357 for Malignant and Benign classes, respectively.
+
+\section{Classification Label Security of Breast Cancer Wisconsin(Diagnostic) Data set}
+All standard procedure described in section $4.3$ for the training with Iris data set is maintained and employed to train the WDBC data set. Considering a train-test split of\hspace{2pt} $80\% : 20\%$\hspace{2pt} for the WDBC data set, the prototypes initialization was done uniformly across the classes with one prototype per class. Training is realized using batches with 32 samples for 100 maximum epochs with $\eta =0.01$. The learned prototypes from the WDBC trained data using the GLVQ, GMLVQ and CELVQ models were accessed and used to determine the classification label security of the WDBC test set. A summary of computed results that indicate the adjusted test accuracy without rejected classifications for the GLVQ, GMLVQ and CELVQ models is summarized in Table \ref{tab:WDC summary3}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|  }
+		\hline
+		\multicolumn{4}{|c|}{Model classification certainty of the WDBC test set} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $ & $\zeta_{\mathbf{w}}^{1}(X)$ & $\zeta(X,W)$ \\
+		\hline
+		GLVQ  &0.89  & 0.86   & 0.875  \\
+		GMLVQ &0.90  & 0.91    & 0.905  \\
+		CELVQ &0.88  & 0.91   & 0.895   \\	
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the WDBC test set]{\label{tab:WDBC certainty}This table contains a summary of the model classification certainty of the WDBC test set with non-reject classification.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$ \hspace{2pt} indicates the classification certainty of the model prototypes with respect to the WDBC-Malignant and WDBC-Benign classes. The average model classification certainty for the WDBC test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|  }
+		\hline
+		\multicolumn{4}{|c|}{Model classification certainty of the WDBC test set $ (h=0.7)$} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $ & $\zeta_{\mathbf{w}}^{1}(X)$ & $\zeta(X,W)$ \\
+		\hline
+		GLVQ  &1.00  &0.92   &0.960   \\
+		GMLVQ &0.93  & 0.94   &0.935  \\
+		CELVQ &1.00  &1.00   &1.000   \\	
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the WDBC test set with threshold security]{\label{tab:WDBC certainty_}This table contains a summary of the model classification certainty of the WDBC test set with reject classification based on a threshold classification label security of 0.7.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$ \hspace{2pt} indicates the classification certainty of the model prototypes with respect to the WDBC-Malignant and WDBC-Benign classes. The average model classification certainty for the WDBC test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|  }
+		\hline
+		%\multicolumn{3}{|c|}{Model classification certainty of the WDBC test set $(h=0.7)$} \\
+		%\hline
+		Model & Test Accuracy $(Acc)$   & Adjusted Test Accuracy $(Acc_{h})$   \\
+		\hline
+		GLVQ &0.87   &0.94   \\
+		GMLVQ &0.90  &0.94   \\
+		CELVQ &0.89  &1.00   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification test accuracy of the WDBC test set]{\label{tab:WDC summary3}This table contains a summary of the model classification test accuracy of the WDBC test set based on a non-reject classification\hspace{2pt}$(\ref{non reject classification})$\hspace{2pt} and a reject classification\hspace{2pt} $(\ref{reject classification strategy})$\hspace{2pt} based on a threshold classification label security\hspace{2pt} $(h=0.7)$.\hspace{2pt}}
+\end{table}
+Observing estimates in Table \ref{tab:WDBC certainty}, \ref{tab:WDBC certainty_} and \ref{tab:WDC summary3}, we can draw an inference on how accurate the models are when they are confident regarding the classifications labels of the test set. In other words, the certainty with which the models (GLVQ, GMLVQ and CELVQ) made the observed classifications from the WDBC test set. We relate this to the computed classification label securities and show by way of visualization (Figures \ref{fig:wgd1}, \ref{fig:wgmld}, \ref{fig:cdl}), regions in the WDBC data space where the models (GLVQ, GMLVQ and CELVQ) are confident or unconfident about the classification labels. We further explore Figure \ref{fig:wgd1} to Figure \ref{fig:cdl} where we can determine for any arbitrarily chosen threshold, regions in the WDBC data space where the models are confident or unconfident about the classification labels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/WDBC3/gtr"}
+	\caption[WDBC train set with GLVQ prototypes]{WDBC train set with GLVQ prototypes and decision boundary}
+	\label{fig:wg1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/WDBC3/gt"}
+	\caption[WDBC test set with GLVQ prototypes]{WDBC test set with GLVQ prototypes and decision boundary}
+	\label{fig:wg2}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/WDBC/wglf"}
+	%\caption[WDBC test set classification label security (GLVQ)]{The data space of the WDBC test set showing the GLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:wgd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{"../../../send from/sendddd/WDBC3/gf"}
+	\caption[WDBC test set classification label security (GLVQ)]{The data space of the WDBC test set showing the GLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:wgd1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/gmtr"}
+	\caption[WDBC train set with GMLVQ prototypes]{WDBC train set with GMLVQ prototypes and decision boundary}
+	\label{fig:wgm1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/gmt"}
+	\caption[WDBC test set with GMLVQ prototypes]{WDBC test set with GMLVQ prototypes and decision boundary}
+	\label{fig:wgm2}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/WDBC/wgmlf"}
+	%\caption[WDBC test set classification label security (GMLVQ)]{The data space of the WDBC test set showing the GMLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:wgmd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/WDBC3/gmf"}
+	\caption[WDBC test set classification label security (GMLVQ)]{The data space of the WDBC test set showing the GMLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:wgmld}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n2/gf"}
+	%\caption[WDBC test set classification label security (GLVQ)]{The data space of the WDBC test set showing the GLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:gf}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/ctr"}
+	\caption[WDBC train set with CELVQ prototypes]{WDBC train set with CELVQ prototypes and decision boundary}
+	\label{fig:c1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/ct"}
+	\caption[WDBC test set with CELVQ prototypes]{WDBC test set with CELVQ prototypes and decision boundary}
+	\label{fig:c2}
+\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=1.0\linewidth]{"../../../send from/sendddd/WDBC/celf"}
+	%\caption[WDBC test set classification label security (CELVQ)]{The data space of the WDBC test set showing the CELVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:cd}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{"../../../send from/sendddd/WDBC3/cf"}
+	\caption[WDBC test set classification label security (CELVQ)]{The data space of the WDBC test set showing the CELVQ model computed label securities with a threshold security $(h=0.7)$.}
+	\label{fig:cdl}
+\end{figure}
+
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n2/gmf"}
+	%\caption[WDBC test set classification label security (GMLVQ)]{The data space of the WDBC test set showing the GMLVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:gmf}
+%\end{figure}
+
+%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=0.9\linewidth]{"../../../send from/send n2/cf"}
+	%\caption[WDBC test set classification label security (CELVQ)]{The data space of the WDBC test set showing the CELVQ model predicted labels along with the computed classification label securities.}
+	%\label{fig:cf}
+%\end{figure} 
+Similarly, from the results in tables \ref{tab:WDBC certainty} and \ref{tab:WDBC certainty_}, we observe for all the three models (GLVQ, GMLVQ and CELVQ), the model classification certainty with and without rejected classifications for the WDBC test set. By referring to Figures \ref{fig:wgd1}, \ref{fig:wgmld} and \ref{fig:cdl}, we can determine for sure whether this recorded certainty and the levels of confidence in the regions of the WDBC- Malignant and Benign class labels were in agreement or not. So for an arbitrary chosen label security threshold of\hspace{2pt} $0.7$, we observe improvements in the model classification certainty for both classes of the WDBC-test set. This same deduction applies to the average model classification certainty. The adjusted test accuracy, not including rejected classification, indicated improvements in the test accuracy, which gives insight into how the models were accurate about their determined confidence.
+By this implementation, we have determined the extent to which the predicted labels of the WDBC test set can be trusted.
+
+
+\chapter{Conclusion and Prospective Work}
+This thesis investigated to determine the classification label security using fuzzy probabilistic assignments of FCM estimates. Chapter 4 exhibited by implementation, computation of the classification label security for the GLVQ, GMLVQ and CELVQ models. So for a given test set, the classification label security of all predicted labels is computed. The visualization of this implementation was accompanied by displaying the regions in the data space for which the considered models were confident or unconfident regarding the classification labels for the data sets used in the experimentations. We also determined the accuracy to which the models made the classifications when they were confident. The classification label security in this regard has been determined.
+Concerning future work, a possibilistic approach to the determination of classification label security will be considered.
+
+
+
+
+\Anhang
+
+\chapter{Reference Implementation in Python}
+\begin{lstlisting}[caption=label\textunderscore security1.py ,style=chstyle, language=Python]
+	"""Module to Determine classification Label Security/Certainty"""
+	import numpy as np
+	from scipy.spatial import distance
+	
+	
+	class LabelSecurity:
+			"""
+			Label Security
+			:params
+	
+			x_test: array, shape=[num_data,num_features]
+			Where num_data is the number of samples and num_features
+		 		refers to the number of features.
+		 
+			class_labels: array-like, shape=[num_classes]
+			Class labels of prototypes
+	
+			predict_results:  array-like, shape=[num_data]
+			Predicted labels of the test-set
+	
+			model_prototypes: array-like, shape=[num_prototypes, num_features]
+	
+			Prototypes from the trained model using train-set, where
+		 		num_prototypes refers to the number of prototypes
+	
+			x_dat : array, shape=[num_data, num_features]
+				Input data
+	
+			fuzziness_parameter: int, optional(default=2)
+			"""
+	
+			def __init__(self, x_test, class_labels, predict_results,
+		 			model_prototypes, x_dat, fuzziness_parameter=2):
+					self.x_test = x_test
+					self.class_labels = class_labels
+					self.predict_results = predict_results
+					self.model_prototypes = model_prototypes
+					self.x_dat = x_dat
+					self.fuzziness_parameter = fuzziness_parameter
+	
+			def label_sec_f(self, x):
+					"""
+					Computes the labels security of each prediction from
+					the model using the test_set
+	
+					:param x
+					predicted labels from the model using test-set
+					:return:
+					labels with their security
+					"""
+	
+					security = float
+			
+					# Empty list to populate with certainty of labels
+					my_label_sec_list = []
+	
+					# loop through the test_set
+					for i in range(self.x_test.shape[0]):		
+					# consider respective class labels
+							for label in range(self.class_labels.shape[0]):
+					# checks where the predicted label equals the class label
+									if self.predict_results[i] == label:
+					# computes the certainty/security per predicted label
+											ed_dis = distance.euclidean(self.x_test[i,
+																		0:self.x_dat.shape[1]],
+																		self.model_prototypes[label,
+																		0:self.x_dat.shape[1]])
+											sum_dis = 0
+											for j in range(
+												self.model_prototypes.shape[0]):
+													sum_dis += np.power(
+															ed_dis /
+															distance.euclidean(self.x_test[i,
+																				0:self.x_dat.shape[1]],
+																				self.model_prototypes[j,
+																				0:self.x_dat.shape[1]]),
+															2 / (self.fuzziness_parameter - 1)
+													)
+													security = 1 / sum_dis
+	
+					my_label_sec_list.append(np.round(security, 4))  # add the computed label certainty to list above
+					my_label_sec_list = np.array(my_label_sec_list)
+					my_label_sec_list = my_label_sec_list.reshape(len(
+							my_label_sec_list), 1)  # reshape list to 1-D array
+					x = np.array(x)
+					x = x.reshape(len(x), 1)  # reshape predicted labels into 1-D array
+					labels_with_certainty = np.concatenate(
+						(x, my_label_sec_list), axis=1)
+					return labels_with_certainty
+	
+	
+	class LabelSecurityM:
+			"""
+			label security for matrix GLVQ
+			:parameters
+			
+			x_test: array, shape=[num_data, num_features]
+			Where num_data refers to the number of samples and
+				 num_features refers to the number of features
+			
+			class_labels: array-like, shape=[num_classes]
+			Class labels of prototypes
+			
+			model_prototypes: array-like, shape=[num_prototypes,
+				 num_features]
+			
+			Prototypes from the trained model using train-set, where
+				 num_prototypes refers to the number of prototypes
+			
+			model_omega: array-like, shape=[dim, num_features]
+			Omega_matrix from the trained model, where dim is an int
+				 refers to the maximum rank
+			
+			x:  array, shape=[num_data, num_features]
+			Input data
+			
+			fuzziness_parameter=int, optional(default=2)
+			"""
+	
+			def __init__(self, x_test, class_labels, model_prototypes,
+					model_omega, x, fuzziness_parameter=2):
+					self.x_test = x_test
+					self.class_labels = class_labels
+					self.model_prototypes = model_prototypes
+					self.model_omega = model_omega
+					self.x = x
+					self.fuzziness_parameter = fuzziness_parameter
+	
+			def label_security_m_f(self, x):
+					"""
+					Computes the label security of each prediction from 
+					the model using the test_set
+					:param x: predicted labels from the model using X_test
+					:return: labels with their securities
+					"""
+					security = " "
+					# Empty list to populate with the label certainty
+					my_label_security_list = []
+					# loop through the test set
+					for i in range(len(self.x_test)):
+					# considers respective class labels of prototypes
+							for label in range(len(self.class_labels)):
+					# checks if predicted label equals class label of prototypes
+									if x[i] == label:
+	
+					# computes the label certainty per predicted label
+											standard_ed = (self.x_test[i,
+															0:self.x.shape[1]] - 
+															self.model_prototypes[label,
+															0:self.x.shape[1]])
+											squared_ed = standard_ed.T.dot(
+													self.model_omega.T).dot(
+													self.model_omega).dot(standard_ed)
+											sum_dis = 0
+											for j in range(
+												len(self.model_prototypes)):
+													standard_ed1 = (self.x_test[i,
+																	0:self.x.shape[1]] -
+																	self.model_prototypes[j,
+																	0:self.x.shape[1]])
+													sum_dis += np.power(
+															squared_ed / (standard_ed1.T.dot(
+																	self.model_omega.T).dot(
+																	self.model_omega).dot(
+																	standard_ed1)),
+															1 / (self.fuzziness_parameter - 1)
+													)
+													security = 1 / sum_dis
+										
+					# adds the computed certainty to the list
+					my_label_security_list.append(np.round(security, 4))
+					my_label_security_list = np.array(
+						my_label_security_list)
+					my_label_security_list = my_label_security_list\
+						.reshape(len(my_label_security_list), 1)  # 1-D array reshape
+					x = np.array(x)
+					x = x.reshape(len(x), 1)  # reshape the predicted labels into 1-D array
+					labels_with_certainty = np.concatenate(
+						(x,my_label_security_list), axis=1)
+					return labels_with_certainty
+	
+	
+	class LabelSecurityLM:
+			"""
+			label security for local matrix GLVQ
+			:parameters
+	
+			x_test: array, shape=[num_data, num_features]
+			Where num_data refers to the number of samples and 
+				num_features refers to the number of features
+	
+			class_labels: array-like, shape=[num_classes]
+			Class labels of prototypes
+	
+			model_prototypes: array-like, shape=[num_prototypes,
+				num_features]
+	
+			Prototypes from the trained model using train-set, where
+				num_prototypes refers to the number of prototypes
+	
+			model_omega: array-like, shape=[dim, num_features]
+			Omega_matrix from the trained model, where dim is an int 
+				refers to the maximum rank
+			
+			x:  array, shape=[num_data, num_features]
+			Input data
+	
+			fuzziness_parameter=int, optional(default=2)
+			"""
+	
+			def __init__(self, x_test, class_labels, model_prototypes,
+				 	model_omega, x, fuzziness_parameter=2):
+					self.x_test = x_test
+					self.class_labels = class_labels
+					self.model_prototypes = model_prototypes
+					self.model_omega = model_omega
+					self.x = x
+					self.fuzziness_parameter = fuzziness_parameter
+	
+			def label_security_lm_f(self, x):
+					"""
+					computes the label security of each prediction from
+					the model using the test_set
+					and returns only labels their corresponding security.
+					:param x: predicted labels from the model using X_test
+					:return: labels with  security
+					"""
+					security = " "
+					# Empty list to populate with the label security
+					my_label_security_list = []
+					# loop through the test set
+					for i in range(len(self.x_test)):
+					# considers respective class labels of prototypes
+							for label in range(len(self.class_labels)):
+					# checks if predicted label equals class label of prototypes
+									if x[i] == label:
+			
+					# computes the label certainty per predicted label
+											standard_ed = (self.x_test[i,
+															0:self.x.shape[1]]-
+															self.model_prototypes[label,
+															0:self.x.shape[1]])
+											squared_ed = standard_ed.T.dot(
+													self.model_omega[label].T).dot(
+													self.model_omega[label]).dot(
+													standard_ed)
+											sum_dis = 0
+											for j in range(len(
+													self.model_prototypes)):
+													standard_ed1 = (self.x_test[i,
+																	0:self.x.shape[1]]-
+																	self.model_prototypes[j,
+																	0:self.x.shape[1]])
+													sum_dis += np.power(
+															squared_ed / (standard_ed1.T.dot(
+																	self.model_omega[j].T).dot(
+																	self.model_omega[j]).dot(
+																	standard_ed1)),
+															1 / (self.fuzziness_parameter - 1)
+													)
+													security = 1 / sum_dis
+	
+					# adds the computed certainty to the list
+					my_label_security_list.append(np.round(security, 4))
+					my_label_security_list = np.array(
+						my_label_security_list)
+					my_label_security_list = my_label_security_list\
+						.reshape(len(my_label_security_list), 1)  # 1-D array reshape
+					x = np.array(x)
+					x = x.reshape(len(x), 1)  # reshape the predicted labels into 1-D array
+					labels_with_certainty = np.concatenate(
+						(x, my_label_security_list), axis=1)
+					return labels_with_certainty
+	
+	
+	if __name__ == '__main__':
+	print('import module to use')
+	
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}[caption = contour.py, style=chstyle, language=Python]
+	"""
+	visualize the classification label securities
+	"""
+	import scipy.interpolate
+	import torch
+	import matplotlib
+	import matplotlib.pyplot as plt
+	import numpy as np
+	from matplotlib.lines import Line2D
+	from matplotlib.colors import ListedColormap
+	
+	matplotlib.style.use('default')
+	class Contourrn:
+			"""
+			visualize the classification label securities
+			"""
+			def __init__(self):
+					pass
+					
+					
+			def plot_dec_boundary(self,
+					x,
+					y,
+					model,
+					model_p,
+					title,
+					xlabel,
+					ylabel,
+					model_type,
+					model_index):
+					
+					"""
+					
+					:param x: X_test
+					:param y: labels of the test set
+					:param model: model object
+					:param model_p: model prototypes
+					:param title: Title of plot
+					:param xlabel: Title of data dimension 1
+					:param ylabel: Title of data dimension 2
+					:param model_type: string: Name of model
+					:param model_index: int: model index
+					:return: 
+					"""
+	
+					colors = ["r", "b", "g", "y", "m"]
+					colors_ = ["r", "b", "g"]
+					marker = ["*", "P", "D", "p", "H"]
+					cm = ListedColormap(colors_)
+					ax = plt.gca()
+					z1 = model_p
+					# Plotting decision regions
+					x_min, x_max = x[:, 0].min() - 1, x[:, 0].max() + 1
+					y_min, y_max = x[:, 1].min() - 1, x[:, 1].max() + 1
+					x1, y1 = np.meshgrid(np.arange(x_min, x_max, 0.05),
+							np.arange(y_min, y_max, 0.05))
+	
+					y_pred_1 = model.predict(torch.Tensor(
+							np.c_[x1.ravel(), y1.ravel()]))
+					Z1 = y_pred_1.reshape(x1.shape)
+					plt.contourf(x1, y1, Z1, alpha=0.4, cmap=cm)
+					# customize the lines
+					# for t in cont.collections:
+					#     t.set_edgecolor('face')
+					#     t.set_linewidth(0)
+					# plt.savefig('test')
+	
+					for t in range(len(y)):
+							if y[t] == 0:
+									s1 = ax.scatter(
+											x[t, 0],
+											x[t, 1],
+											c='r',
+											marker='v',)
+							if y[t] == 1:
+											s2 = ax.scatter(
+											x[t, 0],
+											x[t, 1],
+											c='b',
+											marker='v',)
+							if y[t] == 2:
+											s3 = ax.scatter(
+											x[t, 0],
+											x[t, 1],
+											c='g',
+											marker='v',)
+					legend1 = plt.legend((s1, s2, s3),
+							["Setosa", "Versicolor", "Virginica"],
+							title="Iris Classes",
+							loc="upper left",
+							fancybox=True,
+							framealpha=0.5)
+					ax.add_artist(legend1)
+	
+					# plot learned prototypes
+					t1 = ax.scatter(
+							z1[0][0],
+							z1[0][1],
+							s=100, 
+							color=colors[0], 
+							marker=marker[model_index])
+							t2 = ax.scatter(
+							z1[1][0],
+							z1[1][1], 
+							s=100, 
+							color=colors[1],
+							marker=marker[model_index])
+							t3 = ax.scatter(
+							z1[2][0], 
+							z1[2][1], 
+							s=100, 
+							color=colors[2], 
+							marker=marker[model_index])
+					legend2 = plt.legend(
+							(t1, t2, t3),
+							["Setosa ", "Versicolor ","Virginica"],
+							title=f"{model_type} Prototypes", 
+							loc="lower left", 
+							fancybox=True, framealpha=0.5)
+					ax.add_artist(legend2)
+	
+					plt.title(title)
+					plt.xlabel(xlabel)
+					plt.ylabel(ylabel)
+					
+					return plt.show()
+					
+	
+			def plot__newt(self,
+					x,
+					y,
+					label_sec,
+					model_p,
+					index_list,
+					xlabel,
+					ylabel,
+					title,
+					model_1,
+					model_type,
+					model_index,
+					h):
+					""" visualize classification label securities per
+					class for a test set including learned prototypes 
+					responsible for the classifications.
+					
+					:param x: X_test
+					:param y: labels of the test set
+					:param label_sec: List containing label securities
+					:param model_p: model prototypes
+					:param index_list: List containing(index of data point
+					,label, label security)
+					:param title: Title of Plot
+					:param ylabel: Title of data dimension 2
+					:param xlabel: Title of data dimension 1
+					:param model_1: model understudy
+					:param model_type:string : model name
+					:param model_index: int : 0 for glvq, 1 for gmlvq and
+					 2 for celvq
+					:param h: threshold security
+					:return: Plot
+					"""
+	
+					ax = plt.gca()
+					k = []
+					k1 = []
+					colors = ["r", "b", "g", "y", "m"]
+					marker = ["*", "P", "D", "p", "H"]
+					z_ = label_sec
+					z1 = model_p
+					for j in index_list:
+					k.append(x[j[0], 0])
+					k1.append(x[j[0], 1])
+					x1, y1 = np.linspace(
+							np.min(k), np.max(k),len(k)), np.linspace(
+							np.min(k1), np.max(k1), len(k1))
+							x1, y1 = np.meshgrid(x1, y1)
+					
+					rbf = scipy.interpolate.Rbf(k, k1, z_,
+							function='linear')
+					zi = rbf(x1, y1)
+	
+					x_min, x_max = np.min(k), np.max(k)
+					y_min, y_max = np.min(k1), np.max(k1)
+					x11, y11 = np.meshgrid(np.arange(x_min, x_max, 0.05),
+					np.arange(y_min, y_max, 0.05))
+					y_pred_1 = model_1.predict(
+							torch.Tensor(np.c_[x11.ravel(), y11.ravel()]))
+				
+					Z1 = y_pred_1.reshape(x11.shape)
+				
+					plt.contour(x11, y11, Z1, levels=3,
+					colors = np.array([colors[0], colors[1],
+							colors[1],colors[2]]))
+	
+					# plot the label securities regions
+					plt.imshow(zi,
+							vmin=np.min(z_),
+							vmax=np.max(z_),
+							origin='lower',
+							extent=[np.min(k),
+							np.max(k),
+							np.min(k1),
+							np.max(k1)])
+	
+					# plot classification label securities together with rejected classifications based on a threshold security 
+					j = -1
+					for j1 in index_list:
+							j += 1
+							if y[j] == 0 and j1[1] == 0 and j1[2] >= h:
+									s1 = ax.scatter(
+											x[j, 0],
+											x[j, 1],
+											color='r', 
+											marker='v')
+							if y[j] == 0 and j1[1] != 0 and j1[2] >= h:
+									s1_ = ax.scatter(
+											x[j, 0],
+											x[j, 1], 
+											color='r', 
+											marker='v')
+							if y[j] == 0 and j1[1] == 0 and j1[2] < h:
+									s1__ = ax.scatter(
+											x[j, 0],
+											x[j, 1], 
+											color='r', 
+											marker='v', 
+											edgecolor='k')
+							if y[j] == 0 and j1[1] != 0 and j1[2] < h:
+									s1_ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='r', 
+											marker='v', 
+											edgecolor='k')
+	
+							if y[j] == 1 and j1[1] == 1 and j1[2] >= h:
+									s2 = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='b', 
+											marker='v')
+							if y[j] == 1 and j1[1] != 1 and j1[2] >= h:
+									s2_ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='b', 
+											marker='v')
+							if y[j] == 1 and j1[1] == 1 and j1[2] < h:
+									s2__ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='b', 
+											marker='v', 
+											edgecolor='k')
+							if y[j] == 1 and j1[1] != 1 and j1[2] < h:
+									s2_ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='b', 
+											marker='v', 
+											edgecolor='k')
+	
+							if y[j] == 2 and j1[1] == 2 and j1[2] >= h:
+									s3 = ax.scatter(
+											x[j, 0],
+											x[j, 1], 
+											color='g', 
+											marker='v')
+							if y[j] == 2 and j1[1] != 2 and j1[2] >= h:
+									s3_ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='g', 
+											marker='v')
+							if y[j] == 2 and j1[1] == 2 and j1[2] < h:
+									s3__ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='g', 
+											marker='v', 
+											edgecolor='k')
+							if y[j] == 2 and j1[1] != 2 and j1[2] < h:
+									s3_ = ax.scatter(
+											x[j, 0], 
+											x[j, 1], 
+											color='g', 
+											marker='v', 
+											edgecolor='k')
+	
+						legend1 = plt.legend((s1, s2, s3,),
+								["Setosa", "Versicolor", "Virginica"],
+								title="Iris Classes",
+								loc="upper left", bbox_to_anchor=(-0.6, 1))
+						ax.add_artist(legend1)
+						
+						# plot the learned prototypes
+						t1 = ax.scatter(z1[0][0], 
+								z1[0][1], 
+								s=100, 
+								color=colors[0], 
+								marker=marker[model_index])
+						t2 = ax.scatter(z1[1][0], 
+								z1[1][1], s=100, 
+								color=colors[1], 
+								marker=marker[model_index])
+						t3 = ax.scatter(z1[2][0], 
+								z1[2][1], 
+								s=100, 
+								color=colors[2], 
+								marker=marker[model_index])
+						legend2 = plt.legend((t1, t2, t3,),
+								["Setosa ", "Versicolor ", "Virginica"],
+								title=f"{model_type} Prototypes", loc="lower left",
+								bbox_to_anchor=(-0.6, 0.0))
+						ax.add_artist(legend2)
+	
+						legend_list = []
+						for class_, color in zip(
+							["Setosa ", "Versicolor ", "Virginica"], 
+							['r', 'b', 'g']):
+								legend_list.append(Line2D([0], [0],
+								marker='v', label=class_, ls='None',
+								markerfacecolor=color,
+								markeredgecolor='k'))
+						legend3 = plt.legend(
+								handles=legend_list,
+								loc="center", bbox_to_anchor=(-0.5, 0.5),
+								title='Rejected classification')
+						ax.add_artist(legend3)
+	
+						plt.colorbar()
+						plt.title(title)
+						plt.xlabel(xlabel)
+						plt.ylabel(ylabel)
+						
+						return plt.show()
+						
+	if __name__ == '__main__':
+	print('import module to use')
+	
+\end{lstlisting}
+
+\begin{comment}
+	
+\end{comment}
+
+\begin{comment}
+
+%\begin{lstlisting}[caption = protocert.py, style=chstyle, language=Python]
+	class ProtoCert:
+			"""
+			Prototype certainty and overall model certainty
+			:param
+			x_test: array, shape=[num_data,num_features]
+				Where num_data is the number of samples and num_features
+				refers to the number of features.
+	
+			class_labels: array-like, shape=[num_classes]
+				Class labels of prototypes
+	
+			predict_results:  array-like, shape=[num_data]
+				Predicted labels of the test-set
+	
+			"""
+	
+			def __init__(self, y_test, class_labels, predict_results):
+					self.y_test = y_test
+					self.class_labels = class_labels
+					self.predict_results = predict_results
+	
+			def model_certainty_list(self, x):
+					"""
+					Determines the list of data points whose class is the
+						same as the class of the prototypes
+					:param x:
+					Test set class labels
+					:return:
+					List containing labels of data points whose class is
+						the same as the class of the prototype
+					"""
+					same_list = []
+					for i in range(self.predict_results.shape[0]):
+							if x[i] == self.predict_results[i]:
+									same_list.append(x[i])
+					return same_list
+	
+			def my_proto_cert(self, x):
+					"""
+					Computes the model certainty of the respective
+						prototypes
+					:param x:
+					Class labels of the test set
+					:return:
+					The model certainty with respect to each prototype
+					"""
+					proto_cert_list = []
+					d = {i: self.model_certainty_list(x).count(i)
+						for i in self.model_certainty_list(x)}
+					# tensor so u convert it to numpy list
+					dict_ = {i: list(
+						self.predict_results.numpy()).count(i) 
+						for i in list(self.predict_results.numpy())}
+					# dict_ = {i: list(self.y_test).count(i) 
+						# for i in list(self.y_test)}
+					my_list = list(d.items())
+					my_list1 = list(dict_.items())
+					for label in range(self.class_labels.shape[0]):
+							for i in range(len(self.class_labels)):
+									if my_list[label][0] == my_list1[i][0]:
+											prototype_certainty = my_list[label][1] /\ 
+												my_list1[i][1]
+											proto_cert_list.append([my_list[label][0],
+												prototype_certainty])
+					return proto_cert_list
+	
+			def overall_model_cert(self, x):
+					"""
+					Computes the overall model certainty taking into
+						consideration all respective prototype certainties
+					 	by way of average.
+					:param x:
+					Test set class labels
+					:return:
+					Overall model certainty
+					"""
+	
+					proto_cert = self.my_proto_cert(x)
+					sum_ = 0
+					for i in range(len(self.my_proto_cert(x))):
+							sum_ += self.my_proto_cert(x)[i][1]
+							sum_proto_cert = sum_ / self.class_labels.shape[0]
+					return sum_proto_cert
+					
+			def thresh_function(self, x, y, y_, y__, y___):
+					"""
+					:param x: predicted labels with their corresponding
+						securities
+					:param y: float: security threshold
+					:param y_: string: '>', '<' ,'>=' to indicate the
+						threshold security
+					:param y__: string: 's' for securities , 'i' for index
+						of data point, 'l' for label, 'all' for list with
+						(securities,indexes,labels)
+					:param y___: class label under consideration (None for
+						 all labels)
+					:return: List containing securities( greater than or 
+						less than a given security thresh-hold),
+					"""
+					empty = []
+					empty2 = []
+					empty3 = []
+					empty4 = []
+					for i in range(len(x)):
+					if y_ == '>' and x[i][1] > y and x[i][0] == y___:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '>' and x[i][1] > y and y___ is None:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '>=' and x[i][1] >= y and x[i][0] == y___:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '>=' and x[i][1] >= y and y___ is None:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '=' and x[i][1] == y and x[i][0] == y___:
+							empty.append(x[i][1])
+							empty3.append(x[i][0])
+							empty2.append(i)
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '=' and x[i][1] == y and y___ is None:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '<' and x[i][1] < y and x[i][0] == y___:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y_ == '<' and x[i][1] < y and y___ is None:
+							empty.append(x[i][1])
+							empty2.append(i)
+							empty3.append(x[i][0])
+							empty4.append([i, x[i][0], x[i][1]])
+					if y__ == 'i':
+					return empty2
+					if y__ == 's':
+					return empty
+					if y__ == 'l':
+					return empty3
+					if y__ == 'all':
+					return empty4
+	
+			def thresh_y_test(self, x):
+					"""
+					
+					:param x: thresh hold index list
+					:return: labels with the thresh hold security
+					"""
+					empty = []
+					y = self.y_test
+					for index in x:
+							for i in range(len(y)):
+									if i == index:
+											empty.append(y[i])
+					return empty
+	
+	
+	if __name__ == '__main__':
+	print('import module to use')
+	
+\end{lstlisting
+\end{comment}
+
+%\newpage
+%\lstinputlisting[language=Python,style=chstyle]{labelsecurity.py}
+
+\bibliography{ref}
+\bibliographystyle{IEEEtran}
+
+%\begin{thebibliography}{99}
+%\bibitem{} 
+%\end{thebibliography}
+
+\end{document}
+
