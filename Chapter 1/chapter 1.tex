@@ -1,0 +1,68 @@
+
+% ************************** Thesis Chaptern 1 *****************************
+\chapter{Introduction}
+
+Machine learning as a field of study has gained prominence and publicity in academia and industry in recent times. One is not wrong to say that, Machine learning has become a significant matter of discussion among students, industry players and every professional whose work, one way or the other, is influenced by it. We can at this stage realize why almost every practical process witnessed in our lives today is either applying machine learning or is migrating to its adoption. The benefits that arise with the utilization of machine learning processes can be exemplified and witnessed in areas such as medicine, security, engineering, commerce, agriculture, only to mention a few since the list keeps growing with new innovations and methods being added day by day. 
+
+In this regard, a learning machine is a model tasked to learn from a given data and make valuable predictions on new data that was not used in the learning process. A well-grounded area in machine learning is prototype-based models that learn prototypes from a given data set by training and make classifications on new data using the difference between the data points and learned prototypes. It is suitable to observe the many prototype-based algorithms that are commonly applied today in most processes.  A family of prototype-based models that have pitched the interest of most users is the well-known Learning Vector Quantization. The interest in Learning Vector Quantization can be explained by the facts that surround its easily comprehensible theoretical considerations and practical implementations. At the moment, Learning Vector Quantisation holds an enviable position among the classification algorithms found in the area of prototype-based models.  We begin to ask for reasons in this regard; a simple answer to this question lies in its understandable mathematical inclination, easy usability, high performance coupled with outcomes that can be explained. It is right to say that every classifier has the primary duty of making reasonable or, so to say, good classifications. Again, it is desirable from the usage point of view that a good classifier possesses the attribute that allows users to know the degree to which classification results can be trusted. The ability of a classifier to come equipped with such an attribute is very significant because it provides the security to which classification labels can be accepted. The classification label security remains vital for making decisions in this regard.
+
+
+\section{Motivation}
+T. Kohonen introduced Learning Vector Quantisation (LVQ) as a prototype-based analog of unsupervised competitive learning, which he designed to classify different patterns in data \cite{kohonen2001learning}. Even though LVQ results in optimal reference vectors, it is characterized by issues of divergent reference vectors\cite{sato1996generalized}. This challenge, among others, led to attempts geared towards improved variants in \cite{kohonen2001learning} but to no avail. The outcomes of these variants are, in practice, not the same\cite{biehl2006learning}.
+
+
+The introduction of Generalized Learning Vector Quantization (GLVQ) by Sato and Yamada solved the problem concerning the diverging reference vectors, utilizes a cost function-based approach, and incorporates convergence conditions in the winner takes all learning rule\cite{sato1996generalized}. The reliability and robustness of LVQ and its variants is penchant on the homogeneity of data used and, most importantly, they heavily utilize and depend on Euclidean distance measure which may not be universal for all cases understudy\cite{article}.
+
+GLVQ provides a good generalization with convergence conditions, based on any standard distance metric which can be optimized \cite{hammer2005generalization}. A substantial and balanced step for solving this problem led to applying relevant factors to specify a family of distance measures leading to the  Relevance GLVQ\cite{hammer2002generalized}.
+
+A variant of Relevance LVQ  called Matrix Relevance LVQ utilizes a matrix of relevances that will be learned in the same manner as the weights using GLVQ update rules\cite{schneider2009adaptive}. 
+It remains to show which choice of a matrix of relevant factors initialization is required to parametrize the distance measure for optimal classification results\cite{hammer2002generalized,bunte2012limited}. Consider the optimal classification results linked with the certainty/security of the classification labels from a Fuzzy clustering utilizing a covariance matrix\cite{gath1989unsupervised}. A version of LVQ which utilizes cross-entropy for classification is introduced\cite{villmann2018probabilistic,kaden2014aspects}. The use of cross-entropy optimization in LVQ is discovered to result in class positions that ensure classification label security\cite{villmann2018probabilistic}. The computation of classification label security is reliant on the converged reference vectors\cite{bezdek1981pattern} whose optimization, in turn is also dependent on its initialization\cite{boubezoul2008application}.
+The classification label security remains to be investigated in this regard.
+Consider unsupervised Fuzzy c means (FCM) by Bezdek, which utilizes fuzzy membership to ascertain the certainty of cluster members\cite{bezdek1981pattern}. A good way forward is to investigate the utilization of fuzzy probabilistic assignments of FCM to determine the classification label security with applications to GLVQ, Generalized Matrix Learning Vector Quantization (GMLVQ) and Cross-Entropy Learning Vector Quantization (CELVQ).
+
+\section{Brief on Clustering}
+The clustering task involves partitioning data without labels into subgroups based on data features representing structure in the data set. The underlying similarity between data patterns is used for arranging data into clusters. We consider the following definitions:
+
+\begin{definition}\cite{bezdek1981pattern} 
+	\emph{Hard c-Partition}\label{def:Hard c-Partition}.\hspace{2pt} $ X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_n\right\rbrace $\hspace{2pt} is any finite set;\hspace{2pt} $V_{cn}$\hspace{2pt} is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Hard c-partition space for}\hspace{2pt} $X$\hspace{2pt} is the set		
+	\begin{equation*}\label{hard} %remove
+		M_c= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \{0,1\}\hspace{2pt} \forall\hspace{2pt} i,k\hspace{2pt} ;  \hspace{2pt}\sum_{i=1}^{c} u_{ik}=1 \hspace{2pt}\forall\hspace{2pt} k \hspace{2pt};\hspace{2pt} 0<\sum_{k=1}^{n} u_{ik}< n \hspace{2pt}\forall \hspace{2pt}i \bigg\}
+	\end{equation*}	
+	\begin{subequations}
+		\begin{equation}\label{condition 1}
+			u_{ik}\in \{0,1\},\hspace{10pt}  1\leq i\leq c,\hspace{10pt} 1\leq k\leq n
+		\end{equation}
+		$\left( \ref{condition 1}\right)$\hspace{2pt} means that the fuzzy probabilistic assignment of the $ith$ partition of\hspace{2pt} $X$\hspace{2pt} is $1$ or $0$ when\hspace{2pt} $\mathbf{x}_k$\hspace{2pt} is in the $ith$ partition and otherwise respectively\cite{bezdek1981pattern}. 
+		\begin{equation}\label{condition 2}
+			\sum_{i=1}^{c} u_{ik}=1, \hspace{10pt} 1\leq k \leq n
+		\end{equation}
+		$\left( \ref{condition 2}\right)$\hspace{2pt} indicates each pattern\hspace{2pt} $\mathbf{x}_k$\hspace{2pt} can be uniquely assigned a cluster\hspace{2pt} $c$\hspace{2pt} subsets\cite{bezdek1981pattern}.
+		\begin{equation}\label{cond 3}
+			0<\sum_{k=1}^{n} u_{ik}< n ,\hspace{15pt}  1\leq i \leq c  
+		\end{equation} 
+		$\left( \ref{cond 3}\right) $ indicates there should be at least two partition subsets of\hspace{2pt} $X$\hspace{2pt} and these subsets should also be less than the cardinality of\hspace{2pt} $X$: \(2\leq c<n\)\cite{bezdek1981pattern}.
+		
+		
+	\end{subequations}
+	
+	
+\end{definition}
+
+
+\begin{definition}\cite{bezdek1981pattern}
+	\emph{Fuzzy c-Partition}\label{def:Fuzzy c-Partition}.\hspace{2pt} $ X $\hspace{2pt} is any finite set;\hspace{2pt} $V_{cn}$ is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Fuzzy c-partion space for}\hspace{2pt} $X$\hspace{2pt} is the set
+	\begin{equation}\label{Fuzzy set space}
+		M_{fc}= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \left[ 0,1\right]\hspace{2pt}  \forall\hspace{2pt} i,k\hspace{2pt} \hspace{2pt};\hspace{2pt} \sum_{i=1}^{c} u_{ik}=1\hspace{2pt} \forall\hspace{2pt} k \hspace{2pt};\hspace{2pt}  0<\sum_{k=1}^{n} u_{ik}< n \hspace{2pt} \forall\hspace{2pt} i \bigg\}
+	\end{equation}
+	condition (\ref{condition 1}) is extendend to include all values between $1$ and $0$. Hence removing the crisp assignments of membership functions $u_{ik}$\cite{bezdek1981pattern}.
+	
+\end{definition}
+
+\begin{definition}\cite{pal2005possibilistic}
+	\emph{Possibilistic c-Partition}\label{def:Possibilistic c-Partition}.\hspace{2pt} $ X $ \hspace{2pt}is any finite set;\hspace{2pt} $V_{cn}$ is the set of real\hspace{2pt} $c\times n$\hspace{2pt} matrices;\hspace{2pt} $c$\hspace{2pt} is an integer,\hspace{2pt} $2\leq c< n$.\hspace{2pt} \emph{Possibilistic c-partion space for}\hspace{2pt} $X$\hspace{2pt} is the set	
+	\begin{equation}\label{Possibilistic set space}
+		M_{pc}= \bigg\{ U\in V_{cn}\Bigm| u_{ik}\in \left[ 0,1\right] \hspace{2pt} \forall\hspace{2pt} i,k\hspace{2pt} ;\hspace{2pt} \forall \hspace{2pt}k\hspace{2pt} \exists\hspace{2pt} i \hspace{2pt}\ni u_{ik}> 0\bigg\}
+	\end{equation}
+	the column condition in (\ref{condition 2}) is changed and replaced with\hspace{2pt} $0<\sum_{i=1}^{c} u_{ik}\leq c$\hspace{2pt} and\hspace{2pt} $u_{ik}$\hspace{2pt} is referred to as tipicality of data pattern\hspace{2pt} $\mathbf{x}_k$\cite{krishnapuram1993possibilistic}.
+	
+\end{definition}
