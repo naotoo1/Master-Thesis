@@ -17,7 +17,7 @@ results can be trusted. The uncertainty surrounding classification labels is res
 visualization and documentation of the results.
 
 ## Code base ##
-The Thesis implementaion has been done in Python and can be found here: [Classification-Label-Security-Certainty](https://github.com/naotoo1/Classification-Label-Security-with-CRT)
+The Thesis implementaion has been done in Python and can be found here: [Classification-Label-Security-Certainty](https://github.com/naotoo1/Classification-Label-Security-Certainty)
 
 ## Chapter Overview ##
 ### Chapter 1 ###
