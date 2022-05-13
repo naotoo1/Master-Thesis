@@ -17,8 +17,43 @@ results can be trusted. The uncertainty surrounding classification labels is res
 visualization and documentation of the results.
 
 # Code base
-The Thesis implementaion has been done in Python and can be found here
+The Thesis implementaion has been done in Python and can be found here: [Classification-Label-Security-Certainty](https://github.com/naotoo1/Classification-Label-Security-with-CRT)
+
+# Chapter Overview
+**Chapter 1**
+* Introduction
+* Motivation
+* Brief on Clustering
+
+**Chapter 2**
+* Objective Function Clustering
+*  Fuzzy c-Means
+
+**Chapter 3 : Learning Vector Quantization**
+* Introduction to Learning Vector Quantization
+* Generalized Learning Vector Quantization
+* Generalized Matrix Learning Vector Quantization
+* Cross-Entropy in Learning Vector Quantization
+* Soft Learning Vector Quantization
+* Robust Soft Learning Vector Quantization with Cross-Entropy Optimization
+* Classification Label Security/Certainty
+
+**Chapter 4 : Experimental Results**
+* General Overview of Train/Test Procedure
+* Iris Data Set
+* Classification Label Security of Iris Data set
+* Breast Cancer Wisconsin (Diagnostic) Data set (WDBC)
+* Classification Label Security of Breast Cancer Wisconsin(Diagnostic) Data set
+
+**Chapter 5: Conclusion and Prospective Work**
+* Conclusion
+
+**Appendix A**
+* Reference Implementation in Python
+
+# Thesis Template
+* https://git.hs-mittweida.de/hsmw-latex/hsmw-latex/-/tree/master
 
 
-
-
+# Contact
+ * abekaotoo@gmail.com
