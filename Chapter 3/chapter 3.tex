@@ -1,0 +1,37 @@
+% ************************** Thesis Chaptern 3 *****************************
+
+\section{Classification Label Security/Certainty}
+
+We consider a training set\hspace{2pt} $X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_N\right\rbrace \subseteq \mathbb{R}^n$\hspace{2pt} with its class labels\hspace{2pt} $c\left( \mathbf{x}\right)\in\mathcal{C}=\left\lbrace 1,2,\ldots, C\right\rbrace $,\hspace{2pt} we define a prototype set of vectors\hspace{2pt} $W=\left\lbrace \mathbf{w}_1,\mathbf{w}_2,\ldots,\mathbf{w}_M\right\rbrace\subseteq \mathbb{R}^n $\hspace{2pt} such that every\hspace{2pt} $\mathbf{w}\in W$ \hspace{2pt}has a corresponding class \hspace{2pt}$c\left( \mathbf{w}\right)\in\mathcal{C}$.\hspace{2pt} We divide the training set into the train and test sets, respectively. Using the train set along with standard LVQ training procedure, the learned prototypes \hspace{2pt}$\mathbf{w}_{k}\in W$ \hspace{2pt}together with its classes \hspace{2pt}$c\left( \mathbf{w}_{k} \right) $ \hspace{2pt} are accessed and applied in accordance with the fuzzy probabilistic assignments of FCM described in $\left( \ref{membership function}\right) $\ to determine the classification label security of the test set. So for test data, the classification label security is calculated and returned accordingly. 
+
+We further consider the utilization of the computed classification label securities to determine reject classification and non-reject classification strategy\cite{hanczar2019performance}. Advancing in this regard, we consider a test sample \hspace{2pt}$\mathbf{x}_{k}\subseteq \mathbb{R}^n$\hspace{2pt} for all\hspace{2pt} $1\leq k \leq N$, a given model classifier function indicated by\hspace{2pt} $M_{c}$\hspace{2pt} and the computed classification label security of\hspace{2pt} $\mathbf{x}_{k}$\hspace{2pt} indicated by\hspace{2pt} $u_{ik}$,\hspace{2pt} $1\leq i \leq |\mathcal{C}|$\hspace{2pt} and define a non-reject classification strategy based on
+\begin{equation}\label{non reject classification}
+	M_{c}(\mathbf{x}_{k}) = c_{i}\in\mathcal{C} \hspace{3pt} \arg\max_i\hspace{2pt}\left\lbrace u_{ik}\right\rbrace 
+\end{equation}
+and a reject classification strategy based on 
+\begin{align}\label{reject classification strategy}
+	M_{c}(\mathbf{x}_{k})= 
+	\left \{
+	\begin{aligned}
+		&r, &&  \hspace{10pt}if\hspace{5pt}u_{ik}< h\hspace{10pt} \forall\hspace{2pt} i  \\
+		&c_{i}\in\mathcal{C}, &&  \hspace{10pt}\arg\max_i\hspace{2pt}\left\lbrace u_{ik}\right\rbrace \hspace{10pt}\text{otherwise}
+	\end{aligned} \right.
+\end{align}
+with an extended class set\hspace{2pt} $\mathcal{C}^{\ast} = \mathcal{C}\cup \left\lbrace r\right\rbrace  $\hspace{2pt} where the decision to reject is indicated by\hspace{2pt} $r$\hspace{2pt} based on a fixed but arbitrarily choosen threshold classification label security \hspace{2pt}$h$,\hspace{2pt} $0\leq  h \leq 1$\cite{hanczar2019performance}.
+
+
+The average model classification certainty which indicates regions in the data space where the model is confident with respect to the prototypes is indicated by  
+\begin{equation*}\label{model certainty}
+	\zeta(X,W) = \frac{1}{|W|}\sum_{\mathbf{w}\in W}(\zeta_{\mathbf{w}}(X))
+\end{equation*}
+where $\zeta_{\mathbf{w}}(X)$\hspace{2pt} in $\left( \ref{prototype certainty}\right) $ measures the classification certainty of respective prototype\hspace{2pt} $\mathbf{w}$ and class responsibilities\hspace{2pt} $c \left(\mathbf{w}\right) $ with regards to equation $\left( \ref{reject classification strategy}\right)$  \cite{villmann2018probabilistic} 
+\begin{equation}\label{prototype certainty}
+	\zeta_{\mathbf{w}}(X) = \frac{|\left\{\mathbf{x}\in X|\mathbf{w} = \mathbf{w}_{s(\mathbf{x})}\wedge c(\mathbf{x}) = c(\mathbf{w}_{s(\mathbf{x})})\right\}|}{|\left\{\mathbf{x}\in X|\mathbf{w} = \mathbf{w}_{s(\mathbf{x})}\right\}|}
+\end{equation}
+The behavior of the models concerning the test accuracy \hspace{2pt}$Acc$\hspace{2pt} and the  adjusted test accuracy\hspace{2pt} $Acc_{h} $\hspace{2pt} not including rejected classification based on a given threshold security \hspace{2pt}$h$\hspace{2pt} will also be investigated with
+\begin{equation}\label{model accuracy}
+	Acc_{h} = \frac{|\left\{\mathbf{x}\in X|\ c(\mathbf{x}) = c(\mathbf{w}_{s(\mathbf{x})})\right\}|}{| X|}
+\end{equation}
+for accuracy consideration disregarding any rejected classification, we drop the threshold security\hspace{2pt}\ $h$.
+The model classification certainty\hspace{2pt} $\zeta(X,W)$\hspace{2pt}  will be utilized as the primary metric to evaluate the confidence of the GLVQ, GMLVQ and CELVQ models used in this thesis for the determination of the classification label security.
+
