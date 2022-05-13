@@ -1,0 +1,220 @@
+
+% ************************** Thesis Chaptern 2 *****************************
+\chapter{Learning Vector Quantization}
+
+\section{Introduction to Learning Vector Quantization}
+T. Kohonen introduced Learning Vector Quantization(LVQ) as a prototype-based supervised learning model with the characteristics of being robust and intuitive\cite{kohonen2001learning}. LVQ presents an improvement to the nearest neighbor classifiers by introducing prototypes vectors that are learned and optimized to give improved results in classification\cite{kaden2014aspects}. Even though LVQ is characterized by producing optimal borders, it suffers a weakness of being heuristically inclined, and also, the instability reference vectors become a matter of concern in its application to most classification tasks\cite{kohonen2001learning,article}.
+
+
+Given a training set\hspace{2pt} $X=\left\lbrace \mathbf{x}_1,\mathbf{x}_2,\mathbf{x}_3,\ldots,\mathbf{x}_N\right\rbrace \subseteq \mathbb{R}^n$\hspace{2pt} with its class labels\hspace{2pt} $c\left( \mathbf{x}\right)\in\mathcal{C}=\left\lbrace 1,2,\ldots, C\right\rbrace $,\hspace{2pt} we define a prototype set of vectors\hspace{2pt} $W=\left\lbrace \mathbf{w}_1,\mathbf{w}_2,\ldots,\mathbf{w}_M\right\rbrace\subseteq \mathbb{R}^n $\hspace{2pt} such that every\hspace{2pt} $\mathbf{w}\in W$\hspace{2pt} has a corresponding class\hspace{2pt} $c\left( \mathbf{w}\right)\in\mathcal{C} $.\hspace{2pt} The  training of prototype vectors is based on a competitive learning known as winner-takes-all rule$\left( \ref{winner takes all rule}\right)$  until the prototypes vectors become typical of the classes they represent.
+\begin{equation}\label{winner takes all rule}
+	S\left( \mathbf{x}\right) =\arg\min_k\hspace{3pt} d\left( \mathbf{x},\mathbf{w}_k\right) ,   1\leq k \leq M
+\end{equation}
+Consider data point\hspace{2pt} $\mathbf{x}$, the protype vectors\hspace{4pt}$\mathbf{w}_{ s\left( \mathbf{x}\right) }$\hspace{2pt} is strengthened if\hspace{2pt} $c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) $\hspace{2pt} and weakened if \hspace{2pt}$c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) $ \hspace{2pt}based on an update rule defined in $\left( \ref{update rule}\right)$ utilising $\left( \ref{strengthen or weaken}\right)$   and  a small but positive learning rate \hspace{2pt}$\eta$
+\begin{align}\label{strengthen or weaken}
+	\psi \left( c\left( \mathbf{x}\right) , c\left( \mathbf{w}_{ s\left( \mathbf{x} \right) }\right)\right) = 
+	\left \{
+	\begin{aligned}
+		&+1, &&  \hspace{10pt}c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right) \\
+		&-1, &&  \hspace{10pt} c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)
+	\end{aligned} \right.
+\end{align}
+\begin{equation}\label{update rule}
+	\mathbf{w}_{t+1}=\mathbf{w}_{t} + \eta\psi\left( \mathbf{x}-\mathbf{w}_t\right) ;\hspace{10pt} \mathbf{w}_t=\mathbf{w}_{s\left( \mathbf{x}\right) } ; \hspace{10pt} 0<\eta\ll 1
+\end{equation}
+Though the standard Euclidean distance\hspace{2pt} $d\left( \mathbf{x},\mathbf{w}_k\right) $\hspace{2pt} is primarily utilized in LVQ, it is not limited to it, and that any standard dissimilarity measure is allowed if it fits the data set in question\cite{villmann2017can}.
+The heuristic inclination and the problem of instability of reference vectors led to the development of many LVQ variants\cite{kohonen2001learning}. A more mathematically inclined and generalized version is introduced by Sato and Yamada, which solved the afore-mentioned problems of LVQ \cite{sato1996generalized}.
+\section{Generalized Learning Vector Quantization}
+Sato and Yamada successfully present a generalized version of the LVQ variants, which employs the use of a cost function and an update rule that incorporates convergence conditions for prototype vectors\cite{sato1996generalized}. 
+
+Let\hspace{2pt} $d$\hspace{2pt} be any differentaible dissimilarity measure, \hspace{2pt}$\mathbf{w}^{+}$ \hspace{2pt}is the best matching correct prototype vector if\hspace{2pt} $c\left( \mathbf{x}\right) = c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)$
+and\hspace{2pt} $\mathbf{w}^{-}$\hspace{2pt} be the best matching incorrect prototype vector if\hspace{2pt} $c\left( \mathbf{x}\right) \neq c\left( \mathbf{w}_{ s\left( \mathbf{x}\right) }\right)$\hspace{2pt} then a function\hspace{2pt} $\mu\left( \mathbf{x}\right)$\hspace{2pt} referred to as the classifier function is
+\begin{equation*}%remove
+	\mu \left( \mathbf{x}\right) =\frac{d\left( \mathbf{x},\mathbf{w}^{+}\right)-d\left( \mathbf{x},\mathbf{w}^{-}\right)  }{d\left( \mathbf{x},\mathbf{w}^{+}\right)+d\left( \mathbf{x},\mathbf{w}^{-} \right) }
+\end{equation*}
+$\mu\left( \mathbf{x}\right)\in\left[ -1,1\right], $ indicating\hspace{2pt} $d\left( \mathbf{x},\mathbf{w}^{+}\right)<d\left( \mathbf{x},\mathbf{w}^{-}\right)$\hspace{2pt} whenever classification is correct  meaning\hspace{2pt} $\mu\left( \mathbf{x}\right) $\hspace{2pt} is negative and incorrect classification indicates\hspace{2pt} $\mu\left( \mathbf{x}\right) $ \hspace{2pt}is positive. The cost function is given by,
+\begin{equation}\label{GLVQ cost fucntion}
+	J_{GLVQ}\left( X,W\right) =\sum_{i=1}^{n}f\left( \mu\left( \mathbf{x}_i\right) \right) 
+\end{equation}
+The non-linear activation function $f$, which increases monotonically, is usually chosen as the sigmoid function 
+\begin{align*}
+	f_t\left( \mathbf{x}\right) =\frac{1}{1+e^{\frac{-\mathbf{x}}{t}}} ;\hspace{10pt} t>0
+\end{align*}
+minimization of the cost function in  $\left( \ref{GLVQ cost fucntion}\right)$ is done using the stochastic gradient descent Learning (SGDL), and the update rules are given by $\left( \ref{GLVQ update}\right) $
+\begin{equation}\label{GLVQ update w+}
+	\begin{split}
+		\frac{\partial J}{\partial \mathbf{w}^+}&=\frac{\partial f}{\partial \mu}\cdot\frac{\partial \mu}{\partial d^{+}\left( \mathbf{x}\right)}\cdot\frac{\partial d^{+}\left( \mathbf{x}\right) }{\partial \mathbf{w}^{+}}\\ 
+		&= \frac{\partial f}{\partial \mu}\cdot\frac{-2d^{-}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) + d^{-}\left( \mathbf{x}\right) \right) ^2} \left( -2\right) \left( \mathbf{x}-\mathbf{w}^{+}\right) 	
+	\end{split} 
+\end{equation}
+Similarly,
+\begin{equation}\label{GLVQ upddate W-}
+	\begin{split}
+		\frac{\partial J}{\partial \mathbf{w}^-}&=\frac{\partial f}{\partial \mu}\cdot\frac{\partial \mu}{\partial d^{-}\left( \mathbf{x}\right)}\cdot\frac{\partial d^{-}\left( \mathbf{x}\right) }{\partial \mathbf{w}^{-}}\\
+		&= \frac{\partial f}{\partial \mu}\cdot\frac{2d^{+}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) + d^{-}\left( \mathbf{x}\right) \right) ^2} \left( -2\right) \left( \mathbf{x}-\mathbf{w}^{-}\right)
+	\end{split}
+\end{equation}
+
+from $\left( \ref{GLVQ update w+}\right)$  and $\left( \ref{GLVQ upddate W-}\right)$  we have the update rule $\left( \ref{GLVQ update}\right) $
+\begin{equation}\label{GLVQ update}
+	\Delta \mathbf{w}^{\pm}\propto\frac{-\partial f}{\partial \mu}\cdot\frac{\pm 2d^{\mp}\left( \mathbf{x}\right) }{\left( d^{+}\left( \mathbf{x}\right) +d^{-}\left( \mathbf{x}\right) \right)^2 }\cdot\frac{\partial d\left( \mathbf{x},\mathbf{w}^{\pm }\right) }{\partial \mathbf{w}^{\pm}}
+\end{equation}
+form Equations $\left( \ref{GLVQ update w+}\right)$  and $\left( \ref{GLVQ upddate W-}\right)$  we identify that the attraction and repulsion scheme used in LVQ  is also preserved  in GLVQ\cite{villmann2017can} .
+However, it must be noted that the dissimilarity measure employed in $\left( \ref{GLVQ update}\right)$  is the squared Euclidean distance\cite{sato1996generalized}.
+\section{Generalized Matrix Learning Vector Quantization}
+GLVQ provides a conceptual framework for which all generalized LVQ could be developed. The GLVQ requirement of using a differentiable dissimilarity measure chosen as the standard Euclidean distance in \cite{sato1996generalized} is not ideal for all problems\cite{villmann2017can}. The search for a dissimilarity that can work well for different data sets while keeping the generalization requirement of differentiability led to the introduction of Generalized Relevance Learning Vector Quantization (GRLVQ)\cite{article}. The dissimilarity measure used in GRLVQ is specified with relevant factors, which are learned in the same manner as prototypes in GLVQ\cite{article}. An advanced variant of the GRLVQ, which utilizes a full matrix of relevances in specifying the dissimilarity measure used in GLVQ, is introduced and referred to as Generalized Matrix Learning Vector Quantization (GMLVQ)\cite{article}.
+
+The dissimilarity measure in matrix-GLVQ is given by
+\begin{equation*}%remove
+	d_\Omega\left( \mathbf{x},\mathbf{w}\right)=\left( \mathbf{x}-\mathbf{w}\right) ^{T}\Omega^{T}\Omega\left( \mathbf{x}-\mathbf{w}\right) ;\hspace{10pt} \Omega \in \mathbb{R}^{m\times n},
+\end{equation*}
+when\hspace{2pt} $m$\hspace{2pt} is same as\hspace{2pt} $n$ ; matrix $\Lambda=\Omega^T \Omega \in \mathbb{R}^{n\times n}$  ; $\Omega$ \hspace{2pt}serves the purpose of a projection matrix\cite{villmann2017can}
+\begin{equation}\label{GMLVQ distance}
+	d_\Omega \left( \mathbf{x},\mathbf{w}\right) =\left( \Omega\left( \mathbf{x}- \mathbf{w}\right)\right) ^2
+\end{equation}
+with a positive definite matrix\hspace{2pt} $\Lambda$, $ \left( \ref{GMLVQ distance} \right)$ can be taken as the Euclidean distance.
+Given a classifier of the form
+\begin{equation*}%remove
+	\mu\left( \mathbf{x}\right) =\frac{d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)-d_\Omega\left( \mathbf{x},\mathbf{w}^{-}\right)  }{d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)+d_\Omega\left( \mathbf{x},\mathbf{w}^{-} \right) }
+\end{equation*}
+The extent of classification security is based on the level to which\hspace{2pt} $d_\Omega\left( \mathbf{x},\mathbf{w}^{+}\right)<d_\Omega\left( \mathbf{x},\mathbf{w}^{-}\right)$\cite{article}.
+The cost function is given by
+\begin{equation}\label{GMLVQ costfunction}
+	J_{GMLVQ}\left( X,W\right) =\sum_{i=1}^{n}f\left( \mu\left( \mathbf{x}_i\right) \right) 
+\end{equation}
+Just like in GLVQ, the weights updation in $\left(  \ref{GMLVQ weight updation}\right)$ and the matrix adaptation in $\left( \ref{GMLVQ matrix adaptation}\right)$  is done simultaneously\cite{schneider2009adaptive} with the SGDL used in minimization of $\left( \ref{GMLVQ costfunction}\right)$
+\begin{equation}\label{GMLVQ matrix adaptation}
+	\Delta \Omega\propto \frac{-\partial f}{\partial \mu}\Bigg(  \frac{\partial \mu}{\partial d_{\Omega}^{+}\left( \mathbf{x}\right)}\cdot\frac{\partial d_{\Omega}^{+}\left( \mathbf{x}\right) }{\partial \Omega}+\frac{\partial \mu}{\partial d_{\Omega}^{-}\left( \mathbf{x}\right)}\cdot\frac{\partial d_{\Omega}^{-}\left( \mathbf{x}\right) }{\partial \Omega} \Bigg)
+\end{equation}
+\begin{equation}\label{GMLVQ weight updation}
+	\Delta \mathbf{w}^{\pm}\propto \frac{-\partial f}{\partial \mu}\cdot\frac{\pm 2d_{\Omega}^{\mp}\left( \mathbf{x}\right) }{\left( d_{\Omega}^{+}\left( \mathbf{x}\right) +d_{\Omega}^{-}\left( \mathbf{x}\right) \right)^2 }\cdot\frac{\partial d_{\Omega}\left( \mathbf{x},\mathbf{w}^{\pm }\right) }{\partial \mathbf{w}^{\pm}}
+\end{equation}
+
+
+\section{Cross-Entropy in Learning Vector Quantization}
+We refer to the same introduction and parameters  as used in GLVQ. Considering an information theoretic approach, the training set employed in the learning process comes along with probabilistic target class information given by \hspace{2pt}$(X,T) = \left\lbrace \mathbf{x}_i , \mathbf{t}_i\right\rbrace _{i=1}^{N}$ with\hspace{2pt} $\mathbf{t}_i$\hspace{2pt} being the probabilistic class targets satisfying the conditions\hspace{3pt}  $t_{ij}\in \left[ 0,1\right] $ \hspace{2pt}and \hspace{2pt}$\sum_{j}t_{ij} = 1$\cite{villmann2018probabilistic}.
+
+Given a data point \hspace{2pt}$\mathbf{x}\in X$,\hspace{2pt} consider the class probability vector\hspace{2pt} 
+$p\left( \mathbf{x}\right) =\left( p_{1}\left( \mathbf{x}\right)  ,\ldots,p_{C}\left( \mathbf{x}\right)\right)^{T}  $.\hspace{2pt} Assume a model class predictor\hspace{2pt} $p_{W}\left( \mathbf{x}\right) = \left( p_{W}\left( 1|\mathbf{x}\right) ,p_{W}\left( 2|\mathbf{x}\right) ,\ldots,p_{W}\left( C|\mathbf{x}\right)\right) ^{T} $\hspace{2pt} by Soft Learning Vector Quantization(SLVQ) analogy using model parameters from set\hspace{2pt} $W$.\hspace{2pt} The objective here is to clearly maximize the mutual information between \hspace{2pt}$p\left( \mathbf{x}\right) $\hspace{2pt} and \hspace{2pt}$p_{W}\left( \mathbf{x}\right) $\hspace{2pt}by minimizing the divergence between them\cite{villmann2018probabilistic}. Hence, a function that represents this divergence is,
+\begin{equation}\label{local errors}
+	L\left( X,W\right) = D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation}
+where the Kulbach-Liebler divergence is,
+\begin{equation*}%remove
+	D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)= H\left( p\left( \mathbf{x}\right)\right)  - Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation*}
+$H\left( p\left( \mathbf{x}\right)\right) $ \hspace{2pt}indicates Shanon entropy and\hspace{2pt} $Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right)$\hspace{2pt} indicates cross-entropy.
+It must be noted that alternative divergence such as the Renyi-$\alpha$-divergence may also be considered in this regard,
+\begin{equation}\label{Renyi-divergence}
+	D_{\alpha}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right) =\frac{1}{1-\alpha}\log\left( \sum_{k}\left( p_{k}\left( \mathbf{x}\right) \right) ^{\alpha}\cdot\left( p_{W}\left( k|\mathbf{x}\right) \right) ^{1-\alpha}\right) 	
+\end{equation}
+as $\alpha\rightarrow 1$ we have that
+\begin{align*}
+	D_{\alpha}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)\rightarrow D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)
+\end{align*}
+because the Shanon entropy is independent of the learning parameters, the local errors in $\left(\ref{local errors}\right) $ is minimized, taking into consideration only the cross-entropy
+\begin{equation}\label{cross entropy}
+	\frac{\partial}{\partial w}D_{KL}\left( p\left( \mathbf{x}\right) ||p_{W}\left( \mathbf{x}\right) \right)=\frac{-\partial}{\partial w}Cr\left( p\left( \mathbf{x}\right) ,p_{W}\left( \mathbf{x}\right) \right) 
+\end{equation}
+
+\subsection{Soft Learning Vector Quantization}
+The primary aim is to model a soft class predictor that follows conventional learning vector quantization (prototype-based with Euclidean dissimilarity measure)\cite{seo2003soft,villmann2018probabilistic,kaden2014aspects}. Hence given\hspace{2pt} $\mathbf{x}\in X$,\hspace{2pt} the probability density is determined by 
+\begin{align}
+	P_{W}\left( \mathbf{x}\right) = \sum_{j=1}^{N}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right) 
+\end{align}
+where for prototype \hspace{2pt}$\mathbf{w}_{j}\in W$,\hspace{2pt} $p\left( \mathbf{w}_{j}\right)$\hspace{2pt} indicates the prior probability and\hspace{2pt} $p\left( \mathbf{x}|\mathbf{w}_{j}\right)$\hspace{2pt} indicates the probability of prototype\hspace{2pt} $\mathbf{w}_{j}$\hspace{2pt} to induce\hspace{2pt} $ \mathbf{x}$. 
+We incorporate fixed classes\hspace{2pt} $c\in\mathcal{C}$ \hspace{2pt} of the data point together with LVQ principles of best correct matching prototypes and best incorrect matching prototypes arriving at a joint probability density of the form
+\begin{equation}
+	P_{W}\left( \mathbf{x},c\right) = \sum_{j:c\left( \mathbf{w}_{j}\right) = c}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right)
+\end{equation}
+and 
+\begin{equation}
+	P_{W}\left( \mathbf{x},\neg c\right) = \sum_{j:c\left( \mathbf{w}_{j}\right) \neq c}p\left( \mathbf{x}|\mathbf{w}_{j}\right)p\left( \mathbf{w}_{j}\right)	
+\end{equation}
+referred to as the probability that\hspace{2pt} $\mathbf{x}$\hspace{2pt} is induced by a mixture of Gaussians with the correct class and the probability that\hspace{2pt} $\mathbf{x}$\hspace{2pt} is induced by a mixture of Gaussians with the incorrect class, respectively\cite{seo2003soft,villmann2018probabilistic}. Concerning Soft Learning Vector Quantization (SLVQ), 
+the cost function minimized by stochastic gradient descent learning is given by
+\begin{equation}\label{slvq cost}
+	L_{SLVQ}(X,W) = -\sum_{k}\ln\bigg(\frac{P_{W}(\mathbf{x}_{k},c_{k})}{P_{W}(\mathbf{x}_{k},\neg c_{k})}\bigg)
+\end{equation}
+and for Robust Soft Learning Vector Quantisation (RSLVQ),
+\begin{equation}\label{RSLVQ}
+	L_{RSLVQ}(X,W) = -\sum_{k}\ln\bigg(\frac{P_{W}(\mathbf{x}_{k},c_{k})}{P_{W}(\mathbf{x}_{k})}\bigg)
+\end{equation}
+where,
+\begin{equation}
+	P_{W}(\mathbf{x}_{k}) = P_{W}(\mathbf{x}_{k},c_{k}) + P_{W}(\mathbf{x}_{k},\neg c_{k}\big)
+\end{equation}
+In line with Seo and Obermayer\cite{seo2003soft},\hspace{2pt} $P_{W}(\mathbf{x}_{k})$\hspace{2pt} solves the problem of instability encountered whenever infinity  is attained by the cost function in (\ref{slvq cost}).
+The updates of prototypes for SLVQ is done using
+\begin{equation*}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}L_{SLVQ}(X,W) 
+\end{equation*}
+and in the case of RSLVQ,
+\begin{equation*}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}L_{RSLVQ}(X,W) 
+\end{equation*}
+
+
+%\begin{align}
+%	\frac{\partial}{\partial \mathbf{w}_{l}}L_{RSLVQ}(X,W) = \frac{\partial}{\partial \mathbf{w}_{l}}\ln P_{W}(\mathbf{x}_{k},c_{k}) - \frac{\partial}{\partial \mathbf{w}_{l}}\ln \big( P_{W}(\mathbf{x}_{k},c_{k}) + P_{W}(\mathbf{x}_{k},\neg c_{k}\big)
+%\end{align}
+
+
+
+\subsection{Robust Soft Learning Vector Quantization  with Cross-Entropy Optimization}
+GLVQ, including its variants together with many other prototype-based classifiers, are generally accepted to be highly robust and involve the optimization of the classification error to attain classification results that are highly intrepretable\cite{kaden2014aspects}. A version of LVQ which utilizes the cross-entropy maximization, motivated by information-theoretic principles, is introduced as a generalization of RSLVQ\cite{villmann2018probabilistic}. 
+Hence the cost function of the form,
+\begin{equation*}%remove
+	E_{}\left( X,W\right) =\sum_{\mathtt{x}}D_{KL}\left( t\left( \mathbf{x}\right) ||p_{W}\left(\mathbf {x}\right) \right) 
+\end{equation*}
+from the cross-entropy in $\left(\ref{cross entropy}\right) $. Considering a relation of this model based on prototypes\hspace{2pt} $W=\left\lbrace \mathbf{w}_{1},\mathbf{w}_{2},\ldots,\mathbf{w}_{N}\right\rbrace $ \hspace{2pt}and class responsibilities\hspace{2pt} $c\left( \mathbf{w}_{k}\right)$\hspace{2pt} we have,
+\begin{equation*}%remove
+	Cr_{W}\left( \mathbf{x}\right) =\sum_{c=1}^{C}t_{c}\left( \mathbf{x}\right) \cdot\log\left( p_{W}\left(c|\mathbf{x}\right) \right)  
+\end{equation*}
+and using the  model class prediction probability from SLVQ,
+\begin{align*}
+	p_{W}\left( c|\mathbf{x}\right)=\frac{P_{W}\left( \mathbf{x},c\right) }{P_{W}\left( \mathbf{x}\right) }
+\end{align*}
+with
+\begin{align*}
+	P_{W}\left( \mathbf{x},c\right) &= \sum_{j:c\left( \mathbf{w}_{j}\right) = c}\exp\left( -d_{\Omega}\left( \mathbf{x},\mathbf{w}_{j}\right) \right)\\
+	&= \sum_{j:c\left( \mathbf{w}_{j}\right) = c}\exp\left(-\left( \Omega\left( \mathbf{x}- \mathbf{w}_{j}\right)\right) ^2 \right)
+\end{align*}
+and 
+\begin{align*}
+	P_{W}\left( \mathbf{x}\right) &= \sum_{l}\exp\left( -d_{\Omega}\left( \mathbf{x},\mathbf{w}_{l}\right) \right)\\
+	&=\sum_{l}\exp\left(-\left( \Omega\left( \mathbf{x}- \mathbf{w}_{l}\right)\right) ^2 \right)
+\end{align*}
+we indicate that,\hspace{2pt} $d_{\Omega}\left( \mathbf{x},\mathbf{w}_{j}\right)$\hspace{2pt} for all\hspace{2pt} $\mathbf{w}_{j}\in W$\hspace{2pt} follows the analogy of the dissimilarity measure utilized in GMLVQ.
+We have the cross-entropy presented as
+\begin{align}\label{cross entropy 2}
+	Cr_{W}\left( \mathbf{x}\right) =\sum_{c=1}^{C}t_{c}\left( \mathbf{x}\right) \cdot\log\left( \frac{P_{W}\left( \mathbf{x},c\right) }{P_{W}\left( \mathbf{x}\right) } \right) 
+\end{align}
+From the results in $\left(\ref{cross entropy 2}\right) $,\ is a generalization RSLVQ\cite{villmann2018probabilistic}.
+Concerning mutually exclusive training data, the cost function approaches RSLVQ cost function\cite{villmann2018probabilistic}. We account for this by considering\hspace{2pt} $t_{ij}\in\left\lbrace 0,1\right\rbrace  $\hspace{2pt} together with \hspace{2pt}$\sum_{j}t_{ij}=1$, \hspace{2pt}when we assume the target probability accross the classes is mutually exclusive. So considering one prototype per class,\hspace{2pt} $t_{c}\left( \mathbf{x}\right) = 1$\hspace{2pt} in (\ref{cross entropy 2}) arriving at the same cost functon (\ref{RSLVQ}) for RSLVQ.\\ Mathematically, we have
+\begin{equation*}
+	p\left( t_{i}| \mathbf{x}_{i} \right) = \prod_{j=1}^{C}p_{j}\left( \mathbf{x}_{i}\right) ^{t_{ij}}
+\end{equation*}
+and 
+\begin{equation*}
+	p\left( c_{i}| \mathbf{x}_{i} \right) = \prod_{j=1}^{C}\left( p_{W}\left( j,\mathbf{x}_{i}\right)\right) ^{t_{ij}}
+\end{equation*}
+referred to as the true conditional target probabilty for\hspace{2pt} $\mathbf{x}_{i}$\hspace{2pt} and model target conditional probability for \hspace{2pt}$\mathbf{x}_{i}$ \hspace{2pt}respectively expressed as multinomial distributions\cite{villmann2018probabilistic}. We further consider the log-likelihood ratio
+\begin{equation*}
+	\log \frac{p\left( T|X\right) }{p_{W}\left( C|X\right) } = \log \bigg(\prod_{i=1}^{N}\frac{p\left( t_{i}|\mathbf{x}_{i}\right) }{p_{W}\left( c_{i}|\mathbf{x}_{i}\right)}\bigg)
+\end{equation*}
+expanded as
+\begin{align*}
+	&= \sum_{i=1}^{N}\log\left( p\left( t_{i}|\mathbf{x}_{i}\right)\right) - \sum_{i=1}^{N}\log\left( p_{W}\left( c_{i}|\mathbf{x}_{i}\right)\right) \\
+	&=\sum_{i=1}^{N}\sum_{j=1}^{C}t_{ij}\log\left( p_{j}\left( \mathbf{x}_{i}\right) \right)- \sum_{i=1}^{N}\sum_{j=1}^{C}t_{ij}\log\left( p_{W}\left(j| \mathbf{x}_{i}\right) \right)
+\end{align*}
+and we have the form observed in (\ref{local errors}) below
+\begin{align*}
+	=\sum_{i=1}^{N}H\left( t_{i}\right)  - Cr\left( t_{i},p_{W}\left( \mathbf{x}_{i}\right) \right) 
+\end{align*}
+The cross-entropy is minimized for gradient descent learning with respect to parameter\hspace{2pt} $W$\hspace{2pt}  as \hspace{2pt}$\frac{\partial}{\partial \mathbf{w}_{l}}Cr_{W}\left( \mathbf{x}\right)$\hspace{2pt} and the prototype updates are done using,
+\begin{equation}
+	\Delta \mathbf{w}\propto \frac{-\partial}{\partial \mathbf{w}_{l}}Cr_{W}\left( \mathbf{x}\right)
+\end{equation}
+
+
