@@ -1,0 +1,278 @@
+% ************************** Thesis Chaptern 4 *****************************
+
+\chapter{Experimental Results}
+
+\section{General Overview of Train/Test Procedure }
+A standard and generally accepted procedure in machine learning for model training and testing involve demarcating the data set under consideration into a train set and test set. The ratio of the demarcation puts more weight on the train set than the test set. A good model should endure vigorous training with much of the data set in order to capture a reasonably representable variance per the patterns present in the data set with the remainder of a relatively sizeable unused data points tested on the model to evaluate how well the model can predict with new data points.
+
+A significant way forward will be to have a fair explorable insight of the data points in the data set under study. This will lead to the decision on which data scaling procedure to apply to the data set.
+In this thesis, all data sets used in the experimentation were split into the train-test ratio of $4:1$. The data sets were normalized  with  $\left( \ref{standardization}\right)$ in the data preparation stage.
+\begin{equation}\label{standardization}
+	\mathbf{x}_{s}=\frac{\mathbf{x}-\text{mean}(\mathbf{x})}{\text{standard deviation}(\mathbf{x})}
+\end{equation} 
+$\mathbf{x}_{s}$\hspace{2pt} is the normalized vector and \hspace{2pt}$\mathbf{x}$\hspace{2pt} is the unnormalized vector.
+The train set is first fitted and transformed with the standard feature scaler in  $\left( \ref{standardization} \right) $  whilst the mean$\left(\mathbf{x} \right)$ \hspace{2pt}of the train set  and the standard deviation$\left(\mathbf{x}\right)$  of the train set is used to transform the test set. Generally, this is done to disallow information passage into the model during the testing stage.
+The split must be done to ensure that the training and test sets are mutually disjoint sets.
+
+
+\section{Iris Data Set}
+The Iris data set\cite{fisher1936use} is used in this thesis to determine the classification label security by taking into account the fuzzy probabilistic assignment of FCM estimates. This data set is chosen primarily to reflect its prolific usage for most machine learning implementation schemes. The Iris data set holds an unchallenged position of fame in the machine learning community and remains well understood in such regard. The data set has 150 data points present with three uniform classes, each containing 50 data points with four features, namely sepal length in cm, sepal width in cm, petal length in cm and petal width in cm. The three classes are referred to as Iris Setosa, Iris Versicolour and Iris Virginica.
+
+
+
+\section{Classification Label Security of Iris Data set}
+The Iris data set is normalized as described in $\left( \ref{standardization}\right) $  and in-line with standard train-test procedure, the train samples consists of $80\%$ of the total data points, with the remaining $20\%$ used as test samples. The prototypes initialization is done uniformly across all three classes with one prototype per class. Training is realized using batches with 32 samples for 100 maximum epochs with $\eta =0.01$. The training of the Iris train set was realized using the python implementation\cite{Ravichandran2020}.
+The learned prototypes were accessed and used to determine the classification label security of the Iris test set. The GLVQ, GMLVQ and CELVQ models were employed in the learning and classification of the Iris data set. A summary of computed results that indicate the adjusted test accuracy with and without rejected classifications for the GLVQ, GMLVQ and CELVQ models is summarised in Table \ref{tab:Iris summary2}. The model classification certainty is summarised in Table \ref{tab:Iris summary} and \ref{tab:Iris summary1}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|c|  }
+		\hline
+		\multicolumn{5}{|c|}{Model classification certainty of the Iris test set} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $   & $\zeta_{\mathbf{w}}^{1}(X)$ &$\zeta_{\mathbf{w}}^{2}(X)$  &$\zeta(X,W)$   \\
+		\hline
+		GLVQ & 1.00 &0.69  & 0.89 &0.860  \\
+		GMLVQ &1.00 &0.69  &0.88 &0.857   \\
+		CELVQ  &1.00 &0.69  &0.89 & 0.860   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the Iris test set]{\label{tab:Iris summary}This table contains a summary of the model classification certainty of the Iris test set with non-reject classification.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $,\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{2}(X)$\hspace{2pt} indicates the classification certainty of the model prototypes with respect to the Iris Setosa, Iris Versicolour and Iris Virginica classes. The average model classification certainty for the Iris test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+	
+	
+\end{table}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|c|  }
+		\hline
+		\multicolumn{5}{|c|}{Model classification certainty of the Iris test set $(h=0.7)$} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $   & $\zeta_{\mathbf{w}}^{1}(X)$ &$\zeta_{\mathbf{w}}^{2}(X)$  &$\zeta(X,W)$   \\
+		\hline
+		GLVQ &1.00   &1.00  &1.00  &1.00  \\
+		GMLVQ &1.00  &0.69  &1.00  &0.90   \\
+		CELVQ &1.00  &1.00  &1.00 &1.00  \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the Iris test set with threshold security]{\label{tab:Iris summary1}This table contains a summary of the model classification certainty of the Iris test set with reject classification based on a threshold classification label security of 0.7.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $,\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{2}(X)$\hspace{2pt} indicates the classification certainty of the model prototypes with respect to the Iris Setosa, Iris Versicolour and Iris Virginica classes. The average model classification certainty for the Iris test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|  }
+		\hline
+		%\multicolumn{3}{|c|}{Model classification certainty of the Iris test set $(h=0.7)$} \\
+		%\hline
+		Model & Test Accuracy $(Acc)$ & Adjusted Test Accuracy $(Acc_{h})$   \\
+		\hline
+		GLVQ &0.83   &1.00   \\
+		GMLVQ &0.83  &0.84   \\
+		CELVQ &0.83  &1.00   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification test accuracy of the Iris test set]{\label{tab:Iris summary2}This table contains a summary of the model classification test accuracy of the Iris test set based on a non-reject classification\hspace{2pt}$(\ref{non reject classification})$\hspace{2pt} and a reject classification\hspace{2pt} $(\ref{reject classification strategy})$\hspace{2pt} based on a threshold classification label security\hspace{2pt} $(h=0.7)$.\hspace{2pt}}
+\end{table}
+By the estimates in Table \ref{tab:Iris summary}, \ref{tab:Iris summary1} and \ref{tab:Iris summary2} we can infer how accurate the models are when they are confident regarding the predictions made. In other words, the certainty with which the models (GLVQ, GMLVQ and CELVQ) made the observed classifications from the Iris test set. We relate this to the computed classification label securities and observe by way of visualization (Figures \ref{fig:igd1}, \ref{fig:igmd1} and \ref{fig:icd1}), regions in the Iris data space where the models (GLVQ, GMLVQ and CELVQ) are confident or unconfident about the classification labels. We further explore Figure \ref{fig:igd1} to Figure \ref{fig:icd1} where we can determine for any arbitrarily chosen threshold, regions in the data space where the models are confident or unconfident about the classification labels. The utilization of reject classification strategy $\left( \ref{reject classification strategy}\right) $ was able to improve the model classification certainty both at the class and overall level.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/iris3/gtr"}
+	\caption[Iris train set with GLVQ prototypes]{Iris train set with GLVQ prototypes and decision boundary}
+	\label{fig:ig1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/iris3/gt"}
+	\caption[Iris test set with GLVQ prototypes]{Iris test set with GLVQ prototypes and decision boundary}
+	\label{fig:ig2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gf"}
+	\caption[Iris test set classification label security (GLVQ)]{The data space of the Iris test set showing the GLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:igd1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmtr"}
+	\caption[Iris train set with GMLVQ prototypes]{Iris train set with GMLVQ prototypes and decision boundary}
+	\label{fig:igm1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmt"}
+	\caption[Iris test set with GMLVQ prototypes]{Iris test set with GMLVQ prototypes and decision boundary}
+	\label{fig:igm2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/gmf"}
+	\caption[Iris test set classification label security (GMLVQ)]{The data space of the Iris test set showing the GMLVQ model computed label securities with a threshold security $(h=0.7)$.}
+	\label{fig:igmd1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/iris3/ctr"}
+	\caption[Iris train set with CELVQ prototypes]{Iris train set with CELVQ prototypes and decision boundary}
+	\label{fig:ic1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/iris3/ct"}
+	\caption[Iris test set with CELVQ prototypes]{Iris test set with CELVQ prototypes and decision boundary}
+	\label{fig:ic2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/iris3/cf"}
+	\caption[Iris test set classification label security (CELVQ)]{The data space of the Iris test set showing the CELVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:icd1}
+\end{figure}
+
+
+From the results in Tables \ref{tab:Iris summary} and \ref{tab:Iris summary1}, we observe for all the three models (GLVQ, GMLVQ and CELVQ) that, the model classification certainty with and without rejected classifications for the Iris Setosa class was\hspace{2pt} $1.0$\hspace{2pt}. By referring to Figures \ref{fig:igd1}, \ref{fig:igmd1} and \ref{fig:icd1}, we can determine for sure whether this recorded certainty and the level of confidence in the regions of the Iris Setosa class labels were in agreement or not. So for an arbitrarily chosen label security threshold of\hspace{2pt} $0.7$, we observe that most of the classification labels in the region for the Iris Setosa class had very high label securities. This analogy applies to the observed certainties of the Iris Versicolour and Iris Virginica class as well. The utilization of reject classification strategy $\left( \ref{reject classification strategy}\right) $ was able to improve the test accuracy for all the models. By this implementation, we have determined the extent to which the predicted labels of the Iris test can be trusted.
+
+
+
+\section{Breast Cancer Wisconsin (Diagnostic) Data set (WDBC)}
+This thesis proceeds to test the implementation of the determination of the classification label security on the well-acclaimed WDBC data set\cite{street1993nuclear}, encompassing 569 data points along with 30 numeric, predictive attributes (specified by the mean, standard error and worst). So for each data point, measurements are made under the attributes designations: radius, texture, perimeter, area, smoothness, compactness, concactivity, concave points, symmetry and fractal dimension. Two classes, namely WDBC-Malignant and WDBC-Benign, are primarily considered with somewhat relatively homogeneous class distributions in the ratio of  212:357 for Malignant and Benign classes, respectively.
+
+\section{Classification Label Security of Breast Cancer Wisconsin(Diagnostic) Data set}
+All standard procedure described in section $4.3$ for the training with Iris data set is maintained and employed to train the WDBC data set. Considering a train-test split of\hspace{2pt} $80\% : 20\%$\hspace{2pt} for the WDBC data set, the prototypes initialization was done uniformly across the classes with one prototype per class. Training is realized using batches with 32 samples for 100 maximum epochs with $\eta =0.01$. The learned prototypes from the WDBC trained data using the GLVQ, GMLVQ and CELVQ models were accessed and used to determine the classification label security of the WDBC test set. A summary of computed results that indicate the adjusted test accuracy without rejected classifications for the GLVQ, GMLVQ and CELVQ models is summarized in Table \ref{tab:WDC summary3}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|  }
+		\hline
+		\multicolumn{4}{|c|}{Model classification certainty of the WDBC test set} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $ & $\zeta_{\mathbf{w}}^{1}(X)$ & $\zeta(X,W)$ \\
+		\hline
+		GLVQ  &0.89  & 0.86   & 0.875  \\
+		GMLVQ &0.90  & 0.91    & 0.905  \\
+		CELVQ &0.88  & 0.91   & 0.895   \\	
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the WDBC test set]{\label{tab:WDBC certainty}This table contains a summary of the model classification certainty of the WDBC test set with non-reject classification.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$ \hspace{2pt} indicates the classification certainty of the model prototypes with respect to the WDBC-Malignant and WDBC-Benign classes. The average model classification certainty for the WDBC test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|c|  }
+		\hline
+		\multicolumn{4}{|c|}{Model classification certainty of the WDBC test set $ (h=0.7)$} \\
+		\hline
+		Model &$\zeta_{\mathbf{w}}^{0}(X) $ & $\zeta_{\mathbf{w}}^{1}(X)$ & $\zeta(X,W)$ \\
+		\hline
+		GLVQ  &1.00  &0.92   &0.960   \\
+		GMLVQ &0.93  & 0.94   &0.935  \\
+		CELVQ &1.00  &1.00   &1.000   \\	
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification certainty of the WDBC test set with threshold security]{\label{tab:WDBC certainty_}This table contains a summary of the model classification certainty of the WDBC test set with reject classification based on a threshold classification label security of 0.7.\hspace{2pt} $\zeta_{\mathbf{w}}^{0}(X) $\hspace{2pt} and\hspace{2pt} $\zeta_{\mathbf{w}}^{1}(X)$ \hspace{2pt} indicates the classification certainty of the model prototypes with respect to the WDBC-Malignant and WDBC-Benign classes. The average model classification certainty for the WDBC test set is indicated by\hspace{2pt} $\zeta(X,W)$.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |c|c|c|  }
+		\hline
+		%\multicolumn{3}{|c|}{Model classification certainty of the WDBC test set $(h=0.7)$} \\
+		%\hline
+		Model & Test Accuracy $(Acc)$   & Adjusted Test Accuracy $(Acc_{h})$   \\
+		\hline
+		GLVQ &0.87   &0.94   \\
+		GMLVQ &0.90  &0.94   \\
+		CELVQ &0.89  &1.00   \\		
+		\hline
+	\end{tabular}
+	\caption[Summary of model classification test accuracy of the WDBC test set]{\label{tab:WDC summary3}This table contains a summary of the model classification test accuracy of the WDBC test set based on a non-reject classification\hspace{2pt}$(\ref{non reject classification})$\hspace{2pt} and a reject classification\hspace{2pt} $(\ref{reject classification strategy})$\hspace{2pt} based on a threshold classification label security\hspace{2pt} $(h=0.7)$.\hspace{2pt}}
+\end{table}
+Observing estimates in Table \ref{tab:WDBC certainty}, \ref{tab:WDBC certainty_} and \ref{tab:WDC summary3}, we can draw an inference on how accurate the models are when they are confident regarding the classifications labels of the test set. In other words, the certainty with which the models (GLVQ, GMLVQ and CELVQ) made the observed classifications from the WDBC test set. We relate this to the computed classification label securities and show by way of visualization (Figures \ref{fig:wgd1}, \ref{fig:wgmld}, \ref{fig:cdl}), regions in the WDBC data space where the models (GLVQ, GMLVQ and CELVQ) are confident or unconfident about the classification labels. We further explore Figure \ref{fig:wgd1} to Figure \ref{fig:cdl} where we can determine for any arbitrarily chosen threshold, regions in the WDBC data space where the models are confident or unconfident about the classification labels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/WDBC3/gtr"}
+	\caption[WDBC train set with GLVQ prototypes]{WDBC train set with GLVQ prototypes and decision boundary}
+	\label{fig:wg1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{"../../../send from/sendddd/WDBC3/gt"}
+	\caption[WDBC test set with GLVQ prototypes]{WDBC test set with GLVQ prototypes and decision boundary}
+	\label{fig:wg2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{"../../../send from/sendddd/WDBC3/gf"}
+	\caption[WDBC test set classification label security (GLVQ)]{The data space of the WDBC test set showing the GLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:wgd1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/gmtr"}
+	\caption[WDBC train set with GMLVQ prototypes]{WDBC train set with GMLVQ prototypes and decision boundary}
+	\label{fig:wgm1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/gmt"}
+	\caption[WDBC test set with GMLVQ prototypes]{WDBC test set with GMLVQ prototypes and decision boundary}
+	\label{fig:wgm2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{"../../../send from/sendddd/WDBC3/gmf"}
+	\caption[WDBC test set classification label security (GMLVQ)]{The data space of the WDBC test set showing the GMLVQ model computed classification label securities with a threshold security $(h=0.7)$.}
+	\label{fig:wgmld}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/ctr"}
+	\caption[WDBC train set with CELVQ prototypes]{WDBC train set with CELVQ prototypes and decision boundary}
+	\label{fig:c1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"../../../send from/sendddd/WDBC3/ct"}
+	\caption[WDBC test set with CELVQ prototypes]{WDBC test set with CELVQ prototypes and decision boundary}
+	\label{fig:c2}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{"../../../send from/sendddd/WDBC3/cf"}
+	\caption[WDBC test set classification label security (CELVQ)]{The data space of the WDBC test set showing the CELVQ model computed label securities with a threshold security $(h=0.7)$.}
+	\label{fig:cdl}
+\end{figure}
+
+
+
+Similarly, from the results in tables \ref{tab:WDBC certainty} and \ref{tab:WDBC certainty_}, we observe for all the three models (GLVQ, GMLVQ and CELVQ), the model classification certainty with and without rejected classifications for the WDBC test set. By referring to Figures \ref{fig:wgd1}, \ref{fig:wgmld} and \ref{fig:cdl}, we can determine for sure whether this recorded certainty and the levels of confidence in the regions of the WDBC- Malignant and Benign class labels were in agreement or not. So for an arbitrary chosen label security threshold of\hspace{2pt} $0.7$, we observe improvements in the model classification certainty for both classes of the WDBC-test set. This same deduction applies to the average model classification certainty. The adjusted test accuracy, not including rejected classification, indicated improvements in the test accuracy, which gives insight into how the models were accurate about their determined confidence.
+By this implementation, we have determined the extent to which the predicted labels of the WDBC test set can be trusted.
